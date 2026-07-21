@@ -1,7 +1,7 @@
 /**
  * Real-time Space Data API Integration Engine
  * Connects Celestrak, Launch Library 2, SpaceX, NASA APOD, and NOAA Space Weather APIs.
- * Includes verified multi-rocket hardware specification resolver.
+ * Formats China Tiangong Space Station (CSS), ISS modules, and verified satellites.
  */
 class SpaceApiService {
   constructor() {
@@ -11,6 +11,31 @@ class SpaceApiService {
     this.spacexBase = 'https://api.spacexdata.com/v4/launches/upcoming';
     this.nasaApodUrl = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY';
     this.noaaKpUrl = 'https://services.swpc.noaa.gov/json/planetary_k_index_1m.json';
+  }
+
+  // Format Satellite Names (Translate Space Station & Module Names to Chinese)
+  formatSatelliteName(rawName = '', group = '') {
+    const u = rawName.toUpperCase();
+
+    if (u.includes('CSS') || u.includes('TIANGONG') || u.includes('CELESTIAL') || u.includes('TJH') || u.includes('WENTIAN') || u.includes('MENGTIAN')) {
+      if (u.includes('WENTIAN')) return '🇨🇳 中国天宫空间站 • 问天实验舱 (Wentian)';
+      if (u.includes('MENGTIAN')) return '🇨🇳 中国天宫空间站 • 梦天实验舱 (Mengtian)';
+      if (u.includes('TIANZHOU')) return '🇨🇳 中国天舟货运飞船 (Tianzhou Spacecraft)';
+      return '🇨🇳 中国天宫空间站 • 天和核心舱 (Tiangong CSS)';
+    }
+
+    if (u.includes('ISS') || u.includes('ZARYA') || u.includes('STATION')) {
+      if (u.includes('NAUKA')) return '🇷🇺 国际空间站 • 科学号实验舱 (Nauka)';
+      if (u.includes('KIBO')) return '🇯🇵 国际空间站 • 希望号实验舱 (Kibo)';
+      if (u.includes('COLUMBUS')) return '🇪🇺 国际空间站 • 哥伦布号舱 (Columbus)';
+      if (u.includes('DESTINY')) return '🇺🇸 国际空间站 • 命运号实验舱 (Destiny)';
+      return '🇺🇸/🇷🇺 ISS 国际空间站 (Zarya Core)';
+    }
+
+    if (u.includes('HUBBLE')) return '🔭 哈勃空间望远镜 (Hubble Space Telescope)';
+    if (u.includes('SHENZHOU')) return '🇨🇳 中国神舟载人飞船 (Shenzhou Spacecraft)';
+
+    return rawName;
   }
 
   // Verified Rocket Hardware Specs Database & Resolver
@@ -167,7 +192,7 @@ class SpaceApiService {
 
       return {
         noradId: sat.NORAD_CAT_ID || Math.floor(10000 + Math.random() * 40000),
-        name: sat.OBJECT_NAME || `${group.toUpperCase()}-${sat.NORAD_CAT_ID}`,
+        name: this.formatSatelliteName(sat.OBJECT_NAME || `${group.toUpperCase()}-${sat.NORAD_CAT_ID}`, group),
         intlDesig: sat.OBJECT_ID || '2026-001A',
         group: group,
         inclination: inc,
@@ -185,19 +210,116 @@ class SpaceApiService {
   }
 
   generateFallbackSatellites(group) {
-    const count = group === 'starlink' ? 120 : group === 'stations' ? 6 : 40;
-    const baseAlt = group === 'stations' ? 420 : group === 'beidou' ? 21500 : group === 'gps-ops' ? 20200 : 550;
-    const baseInc = group === 'stations' ? 51.6 : group === 'beidou' ? 55.0 : group === 'gps-ops' ? 55.0 : 53.2;
+    if (group === 'stations') {
+      return [
+        {
+          noradId: 48274,
+          name: '🇨🇳 中国天宫空间站 • 天和核心舱 (Tiangong CSS)',
+          intlDesig: '2021-035A',
+          group: 'stations',
+          inclination: 41.5,
+          periodMinutes: '92.2',
+          altitudeKm: 390,
+          speedKms: '7.68',
+          eccentricity: 0.0004,
+          raan: 110.0,
+          argPerigee: 45.0,
+          meanAnomaly: 120.0,
+          tleLine1: '1 48274U 21035A   26201.55421157  .00016717  00000-0  30123-3 0  9993',
+          tleLine2: '2 48274  41.4720 110.4182 0005423  88.3145 271.8541 15.58412034123'
+        },
+        {
+          noradId: 53239,
+          name: '🇨🇳 中国天宫空间站 • 问天实验舱 (Wentian)',
+          intlDesig: '2022-085A',
+          group: 'stations',
+          inclination: 41.5,
+          periodMinutes: '92.2',
+          altitudeKm: 390,
+          speedKms: '7.68',
+          eccentricity: 0.0004,
+          raan: 110.1,
+          argPerigee: 45.1,
+          meanAnomaly: 120.2,
+          tleLine1: '1 53239U 22085A   26201.55421157  .00016717  00000-0  30123-3 0  9993',
+          tleLine2: '2 53239  41.4720 110.4182 0005423  88.3145 271.8541 15.58412034124'
+        },
+        {
+          noradId: 54216,
+          name: '🇨🇳 中国天宫空间站 • 梦天实验舱 (Mengtian)',
+          intlDesig: '2022-143A',
+          group: 'stations',
+          inclination: 41.5,
+          periodMinutes: '92.2',
+          altitudeKm: 390,
+          speedKms: '7.68',
+          eccentricity: 0.0004,
+          raan: 110.2,
+          argPerigee: 45.2,
+          meanAnomaly: 120.4,
+          tleLine1: '1 54216U 22143A   26201.55421157  .00016717  00000-0  30123-3 0  9993',
+          tleLine2: '2 54216  41.4720 110.4182 0005423  88.3145 271.8541 15.58412034125'
+        },
+        {
+          noradId: 25544,
+          name: '🇺🇸/🇷🇺 ISS 国际空间站 (Zarya Core)',
+          intlDesig: '1998-067A',
+          group: 'stations',
+          inclination: 51.64,
+          periodMinutes: '92.9',
+          altitudeKm: 420,
+          speedKms: '7.66',
+          eccentricity: 0.0005,
+          raan: 290.4,
+          argPerigee: 88.3,
+          meanAnomaly: 271.8,
+          tleLine1: '1 25544U 98067A   26201.55421157  .00016717  00000-0  30123-3 0  9993',
+          tleLine2: '2 25544  51.6416 290.4182 0005423  88.3145 271.8541 15.49814725578'
+        },
+        {
+          noradId: 58369,
+          name: '🇷🇺 国际空间站 • 科学号实验舱 (Nauka)',
+          intlDesig: '2021-066A',
+          group: 'stations',
+          inclination: 51.64,
+          periodMinutes: '92.9',
+          altitudeKm: 420,
+          speedKms: '7.66',
+          eccentricity: 0.0005,
+          raan: 290.5,
+          argPerigee: 88.4,
+          meanAnomaly: 271.9,
+          tleLine1: '1 58369U 21066A   26201.55421157  .00016717  00000-0  30123-3 0  9993',
+          tleLine2: '2 58369  51.6416 290.4182 0005423  88.3145 271.8541 15.49814725579'
+        },
+        {
+          noradId: 20580,
+          name: '🔭 哈勃空间望远镜 (Hubble Space Telescope)',
+          intlDesig: '1990-037B',
+          group: 'stations',
+          inclination: 28.47,
+          periodMinutes: '95.4',
+          altitudeKm: 535,
+          speedKms: '7.59',
+          eccentricity: 0.0003,
+          raan: 45.8,
+          argPerigee: 12.4,
+          meanAnomaly: 340.1,
+          tleLine1: '1 20580U 90037B   26201.55421157  .00016717  00000-0  30123-3 0  9993',
+          tleLine2: '2 20580  28.4700  45.8123 0003423  12.4145 340.1541 15.09814725123'
+        }
+      ];
+    }
+
+    const count = group === 'starlink' ? 120 : 40;
+    const baseAlt = group === 'beidou' ? 21500 : group === 'gps-ops' ? 20200 : 550;
+    const baseInc = group === 'beidou' ? 55.0 : group === 'gps-ops' ? 55.0 : 53.2;
 
     const list = [];
     for (let i = 1; i <= count; i++) {
-      const namePrefix = group === 'stations' 
-        ? (i === 1 ? 'ISS (国际空间站)' : i === 2 ? 'CSS (中国天宫空间站)' : i === 3 ? 'HUBBLE (哈勃望远镜)' : `STATION-MODULE-${i}`)
-        : `${group.toUpperCase()}-${1000 + i}`;
-
       list.push({
         noradId: 50000 + i,
-        name: namePrefix,
+        name: `${group.toUpperCase()}-${1000 + i}`,
         intlDesig: `2026-0${Math.floor(i / 10)}${i % 10}A`,
         group: group,
         inclination: baseInc + (Math.random() * 2 - 1),

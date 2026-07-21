@@ -460,8 +460,17 @@ class Globe3DEngine {
     if (preset === 'reset') {
       this.camera.position.set(0, 14, 24);
       this.controls.target.set(0, 0, 0);
+    } else if (preset === 'css') {
+      const cssMesh = this.satMeshList.find(m => m.userData.satData.name.includes('天宫') || m.userData.satData.name.includes('CSS') || m.userData.satData.name.includes('TIANGONG'));
+      if (cssMesh) {
+        this.camera.position.set(cssMesh.position.x * 1.4, cssMesh.position.y * 1.4, cssMesh.position.z * 1.4);
+        this.controls.target.copy(cssMesh.position);
+      } else {
+        this.camera.position.set(8, 11, 16);
+        this.controls.target.set(0, 0, 0);
+      }
     } else if (preset === 'iss') {
-      const issMesh = this.satMeshList.find(m => m.userData.satData.name.includes('ISS') || m.userData.satData.name.includes('CSS'));
+      const issMesh = this.satMeshList.find(m => m.userData.satData.name.includes('ISS') || m.userData.satData.name.includes('Zarya'));
       if (issMesh) {
         this.camera.position.set(issMesh.position.x * 1.4, issMesh.position.y * 1.4, issMesh.position.z * 1.4);
         this.controls.target.copy(issMesh.position);
