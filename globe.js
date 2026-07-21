@@ -1,7 +1,6 @@
 /**
  * Three.js WebGL 3D Globe & Satellite Orbital Render Engine
- * Crystal-Clear High-Contrast Vivid Earth Render (Zero Fog / Zero Haze)
- * Recreates the vibrant deep blue ocean, golden Sahara desert, lush green vegetation, and crystal sharp clarity of NASA 4K Earth imagery.
+ * Elimination of Specular Glare Discs & Crisp NASA Blue Marble Texturing.
  */
 class Globe3DEngine {
   constructor(containerId) {
@@ -46,7 +45,7 @@ class Globe3DEngine {
     this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     this.camera.position.set(0, 14, 24);
 
-    // 3. Renderer with High Sharpening
+    // 3. Renderer with SRGB Color Management
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -59,19 +58,19 @@ class Globe3DEngine {
     this.controls.minDistance = 11;
     this.controls.maxDistance = 60;
 
-    // 5. Dynamic Lighting (High Vibrancy & High Contrast)
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
+    // 5. Clean Dynamic Lighting (Zero Glare Discs)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
     this.scene.add(ambientLight);
 
-    const sunLight = new THREE.DirectionalLight(0xffffff, 1.4);
-    sunLight.position.set(35, 25, 30);
+    const sunLight = new THREE.DirectionalLight(0xffffff, 1.1);
+    sunLight.position.set(30, 20, 25);
     this.scene.add(sunLight);
 
-    const rimLight = new THREE.DirectionalLight(0x00f3ff, 0.7);
-    rimLight.position.set(-35, -15, -30);
+    const rimLight = new THREE.DirectionalLight(0x4488aa, 0.25);
+    rimLight.position.set(-30, -10, -25);
     this.scene.add(rimLight);
 
-    // 6. Build Crystal-Clear NASA Earth, Atmospheric Glow & Spaceports
+    // 6. Build High-Contrast NASA Earth, Atmosphere Glow & Spaceports
     this.createStarfield();
     this.createEarth();
     this.createAtmosphere();
@@ -86,12 +85,12 @@ class Globe3DEngine {
     this.animate();
   }
 
-  // Create High-Contrast Crystal-Clear Earth Sphere
+  // Create High-Contrast Glare-Free Earth Sphere
   createEarth() {
     const radius = 8;
     const geometry = new THREE.SphereGeometry(radius, 64, 64);
 
-    // 2048x1024 High-Resolution Vibrant Map Canvas
+    // 2048x1024 High-Resolution Crisp Map Canvas
     const canvas = document.createElement('canvas');
     canvas.width = 2048;
     canvas.height = 1024;
@@ -100,10 +99,10 @@ class Globe3DEngine {
     const w = 2048;
     const h = 1024;
 
-    // 1. Deep Vibrant Royal Blue Ocean Base
+    // 1. Deep Royal Navy Ocean Base
     const oceanGrad = ctx.createLinearGradient(0, 0, 0, h);
     oceanGrad.addColorStop(0, '#061730');
-    oceanGrad.addColorStop(0.5, '#0b3566');
+    oceanGrad.addColorStop(0.5, '#0b386b');
     oceanGrad.addColorStop(1, '#061730');
     ctx.fillStyle = oceanGrad;
     ctx.fillRect(0, 0, w, h);
@@ -116,10 +115,10 @@ class Globe3DEngine {
     }
 
     // 2. High-Tech Grid Lines
-    ctx.strokeStyle = 'rgba(0, 243, 255, 0.25)';
+    ctx.strokeStyle = 'rgba(0, 243, 255, 0.22)';
     ctx.lineWidth = 1.2;
     ctx.font = 'bold 16px JetBrains Mono, monospace';
-    ctx.fillStyle = 'rgba(0, 243, 255, 0.85)';
+    ctx.fillStyle = 'rgba(0, 243, 255, 0.8)';
 
     const lats = [66.5, 30, 0, -30, -66.5];
     const latLabels = ['66.5°N (北极圈)', '30°N', '0° (赤道 Equator)', '30°S', '66.5°S (南极圈)'];
@@ -143,7 +142,7 @@ class Globe3DEngine {
       ctx.fillText(lonLabels[idx], p.x + 6, h - 25);
     });
 
-    // 3. Draw High-Contrast Landmass Polygons with Crisp Borders
+    // 3. Draw High-Contrast Landmass Polygons
     function drawLandPolygon(pts, fillStyle = '#1b7a42', strokeStyle = '#00f3ff') {
       ctx.fillStyle = fillStyle;
       ctx.strokeStyle = strokeStyle;
@@ -199,11 +198,11 @@ class Globe3DEngine {
       [114, -22], [130, -12], [142, -11], [153, -28], [148, -38], [115, -35]
     ], '#d35400', '#f39c12');
 
-    // Polar Ice Caps (南北极极度纯白冰盖)
+    // Polar Ice Caps (南北极纯白冰盖)
     drawLandPolygon([[-180, 75], [180, 75], [180, 90], [-180, 90]], '#ffffff', '#00f3ff');
     drawLandPolygon([[-180, -70], [180, -70], [180, -90], [-180, -90]], '#ffffff', '#00f3ff');
 
-    // Bright City Lights
+    // City Lights
     ctx.fillStyle = '#ffeaa7';
     const cityLights = [
       [116.4, 39.9], [121.5, 31.2], [113.2, 23.1], [114.1, 22.3],
@@ -219,20 +218,20 @@ class Globe3DEngine {
 
     const canvasTexture = new THREE.CanvasTexture(canvas);
 
-    // MeshPhongMaterial for Crystal-Clear Vivid Color Rendering & Ocean Specular Glare
+    // MeshPhongMaterial with Subtle Water Reflection (No Blown-out Glare Discs)
     const earthMaterial = new THREE.MeshPhongMaterial({
       map: canvasTexture,
-      shininess: 35,
-      specular: new THREE.Color(0x00f3ff)
+      shininess: 12,
+      specular: new THREE.Color(0x112233)
     });
 
     this.earth = new THREE.Mesh(geometry, earthMaterial);
     this.scene.add(this.earth);
 
-    // Load High-Res NASA Blue Marble Map Texture
+    // Load High-Res NASA Blue Marble Map Texture from Unpkg CDN
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load(
-      'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg',
+      'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
       (nasaTexture) => {
         earthMaterial.map = nasaTexture;
         earthMaterial.needsUpdate = true;
@@ -242,12 +241,12 @@ class Globe3DEngine {
 
   // Create Glow Atmosphere Outer Shell
   createAtmosphere() {
-    const radius = 8.35;
+    const radius = 8.32;
     const geometry = new THREE.SphereGeometry(radius, 48, 48);
     const material = new THREE.MeshBasicMaterial({
       color: 0x00f3ff,
       transparent: true,
-      opacity: 0.15,
+      opacity: 0.12,
       side: THREE.BackSide
     });
     this.atmosphere = new THREE.Mesh(geometry, material);
