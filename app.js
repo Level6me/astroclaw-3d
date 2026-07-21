@@ -546,7 +546,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.spaceAudio) window.spaceAudio.playClick();
     const isCollapsed = forceState !== undefined ? forceState : !sidebarLeft.classList.contains('pc-collapsed');
     sidebarLeft.classList.toggle('pc-collapsed', isCollapsed);
-    if (btnExpandLeft) btnExpandLeft.classList.toggle('hidden', !isCollapsed);
+    if (btnExpandLeft) {
+      btnExpandLeft.style.display = isCollapsed ? 'flex' : 'none';
+    }
     if (globe && globe.onWindowResize) setTimeout(() => globe.onWindowResize(), 360);
   }
 
@@ -554,7 +556,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.spaceAudio) window.spaceAudio.playClick();
     const isCollapsed = forceState !== undefined ? forceState : !sidebarRight.classList.contains('pc-collapsed');
     sidebarRight.classList.toggle('pc-collapsed', isCollapsed);
-    if (btnExpandRight) btnExpandRight.classList.toggle('hidden', !isCollapsed);
+    if (btnExpandRight) {
+      btnExpandRight.style.display = isCollapsed ? 'flex' : 'none';
+    }
     if (globe && globe.onWindowResize) setTimeout(() => globe.onWindowResize(), 360);
   }
 
