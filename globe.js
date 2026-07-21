@@ -1,6 +1,7 @@
 /**
  * Three.js WebGL 3D Globe & Satellite Orbital Render Engine
- * Photorealistic NASA Blue Marble Earth with Balanced Space Lighting (PBR Standard Material) to prevent overexposure.
+ * Crystal-Clear High-Contrast Vivid Earth Render (Zero Fog / Zero Haze)
+ * Recreates the vibrant deep blue ocean, golden Sahara desert, lush green vegetation, and crystal sharp clarity of NASA 4K Earth imagery.
  */
 class Globe3DEngine {
   constructor(containerId) {
@@ -11,7 +12,6 @@ class Globe3DEngine {
     this.controls = null;
     
     this.earth = null;
-    this.cloudsMesh = null;
     this.atmosphere = null;
     this.satelliteGroup = new THREE.Group();
     this.orbitLinesGroup = new THREE.Group();
@@ -46,7 +46,7 @@ class Globe3DEngine {
     this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     this.camera.position.set(0, 14, 24);
 
-    // 3. Renderer with SRGB Output Color Space
+    // 3. Renderer with High Sharpening
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -59,19 +59,19 @@ class Globe3DEngine {
     this.controls.minDistance = 11;
     this.controls.maxDistance = 60;
 
-    // 5. Balanced Dynamic Lighting (Prevents Overexposure Washout)
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
+    // 5. Dynamic Lighting (High Vibrancy & High Contrast)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
     this.scene.add(ambientLight);
 
-    const sunLight = new THREE.DirectionalLight(0xffffff, 0.95);
-    sunLight.position.set(30, 20, 25);
+    const sunLight = new THREE.DirectionalLight(0xffffff, 1.4);
+    sunLight.position.set(35, 25, 30);
     this.scene.add(sunLight);
 
-    const blueRimLight = new THREE.DirectionalLight(0x00f3ff, 0.35);
-    blueRimLight.position.set(-30, -10, -25);
-    this.scene.add(blueRimLight);
+    const rimLight = new THREE.DirectionalLight(0x00f3ff, 0.7);
+    rimLight.position.set(-35, -15, -30);
+    this.scene.add(rimLight);
 
-    // 6. Build Photorealistic NASA Earth, Cloud Shell, Glow & Spaceports
+    // 6. Build Crystal-Clear NASA Earth, Atmospheric Glow & Spaceports
     this.createStarfield();
     this.createEarth();
     this.createAtmosphere();
@@ -86,12 +86,12 @@ class Globe3DEngine {
     this.animate();
   }
 
-  // Create NASA Photorealistic Earth + Soft Cloud Layer
+  // Create High-Contrast Crystal-Clear Earth Sphere
   createEarth() {
     const radius = 8;
     const geometry = new THREE.SphereGeometry(radius, 64, 64);
 
-    // 1. Procedural Realistic Base Canvas Map (Natural Land & Ocean Tones)
+    // 2048x1024 High-Resolution Vibrant Map Canvas
     const canvas = document.createElement('canvas');
     canvas.width = 2048;
     canvas.height = 1024;
@@ -100,11 +100,11 @@ class Globe3DEngine {
     const w = 2048;
     const h = 1024;
 
-    // Ocean Base Layer
+    // 1. Deep Vibrant Royal Blue Ocean Base
     const oceanGrad = ctx.createLinearGradient(0, 0, 0, h);
-    oceanGrad.addColorStop(0, '#091e3a');
-    oceanGrad.addColorStop(0.5, '#113254');
-    oceanGrad.addColorStop(1, '#091e3a');
+    oceanGrad.addColorStop(0, '#061730');
+    oceanGrad.addColorStop(0.5, '#0b3566');
+    oceanGrad.addColorStop(1, '#061730');
     ctx.fillStyle = oceanGrad;
     ctx.fillRect(0, 0, w, h);
 
@@ -115,11 +115,11 @@ class Globe3DEngine {
       };
     }
 
-    // High-Tech Grid Lines
-    ctx.strokeStyle = 'rgba(0, 243, 255, 0.18)';
-    ctx.lineWidth = 1;
-    ctx.font = '16px JetBrains Mono, monospace';
-    ctx.fillStyle = 'rgba(0, 243, 255, 0.6)';
+    // 2. High-Tech Grid Lines
+    ctx.strokeStyle = 'rgba(0, 243, 255, 0.25)';
+    ctx.lineWidth = 1.2;
+    ctx.font = 'bold 16px JetBrains Mono, monospace';
+    ctx.fillStyle = 'rgba(0, 243, 255, 0.85)';
 
     const lats = [66.5, 30, 0, -30, -66.5];
     const latLabels = ['66.5°N (北极圈)', '30°N', '0° (赤道 Equator)', '30°S', '66.5°S (南极圈)'];
@@ -143,11 +143,11 @@ class Globe3DEngine {
       ctx.fillText(lonLabels[idx], p.x + 6, h - 25);
     });
 
-    // Draw Photorealistic Landmasses with Natural Tones
-    function drawLandPolygon(pts, fillStyle = '#2d6a4f', strokeStyle = '#40916c') {
+    // 3. Draw High-Contrast Landmass Polygons with Crisp Borders
+    function drawLandPolygon(pts, fillStyle = '#1b7a42', strokeStyle = '#00f3ff') {
       ctx.fillStyle = fillStyle;
       ctx.strokeStyle = strokeStyle;
-      ctx.lineWidth = 1.2;
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
       pts.forEach((pt, i) => {
         const p = ll2xy(pt[0], pt[1]);
@@ -159,52 +159,52 @@ class Globe3DEngine {
       ctx.stroke();
     }
 
-    // Eurasia (亚欧大陆)
+    // Eurasia (亚欧大陆 - 鲜艳森林绿)
     drawLandPolygon([
       [10, 36], [30, 31], [45, 12], [55, 25], [70, 20], [80, 10], [100, 5], [105, 10], 
       [120, 23], [122, 30], [125, 40], [130, 43], [140, 55], [170, 65], [180, 68],
       [180, 75], [100, 78], [60, 70], [30, 70], [10, 60], [-10, 52], [-9, 38]
-    ], '#2b580c', '#548c58');
+    ], '#1b7a42', '#38ef7d');
 
-    // China & East Asia (中国与东亚区域)
+    // China & East Asia (中国及周边区域 - 高亮翠绿)
     drawLandPolygon([
       [75, 38], [80, 45], [90, 48], [120, 53], [131, 43], [122, 30], [120, 23], 
       [110, 20], [108, 22], [100, 21], [92, 28], [80, 28], [75, 35]
-    ], '#387c2b', '#00f3ff');
+    ], '#2e7d32', '#00f3ff');
 
-    // Sahara Desert (撒哈拉沙漠)
+    // Sahara Desert & Middle East (撒哈拉金黄沙漠)
     drawLandPolygon([
       [-17, 15], [10, 37], [35, 35], [55, 25], [45, 12], [30, 15], [10, 10]
-    ], '#c49a6c', '#d4a373');
+    ], '#e67e22', '#f39c12');
 
-    // Central & South Africa (非洲雨林与南部)
+    // Central & South Africa (非洲雨林)
     drawLandPolygon([
       [-17, 15], [10, 10], [30, 15], [40, -10], [33, -34], [18, -34], [12, -5], [8, 5]
-    ], '#1b4332', '#2d6a4f');
+    ], '#116466', '#2c7a7b');
 
     // North America (北美洲)
     drawLandPolygon([
       [-168, 65], [-140, 60], [-125, 49], [-120, 34], [-105, 20], [-80, 25], 
       [-75, 35], [-65, 44], [-60, 47], [-64, 60], [-80, 65], [-110, 69]
-    ], '#2d5a27', '#40916c');
+    ], '#237a3b', '#00ff88');
 
-    // South America (南美洲)
+    // South America (南美洲亚马逊)
     drawLandPolygon([
       [-80, 8], [-75, 11], [-60, 3], [-35, -5], [-38, -20], [-55, -35], 
       [-68, -55], [-75, -45], [-80, -4]
-    ], '#1b4332', '#40916c');
+    ], '#157a47', '#20bf6b');
 
     // Australia (澳大利亚)
     drawLandPolygon([
       [114, -22], [130, -12], [142, -11], [153, -28], [148, -38], [115, -35]
-    ], '#b87333', '#d4a373');
+    ], '#d35400', '#f39c12');
 
-    // Polar Ice Caps (南北极纯白冰盖)
-    drawLandPolygon([[-180, 75], [180, 75], [180, 90], [-180, 90]], '#e0f1f7', '#ffffff');
-    drawLandPolygon([[-180, -70], [180, -70], [180, -90], [-180, -90]], '#e0f1f7', '#ffffff');
+    // Polar Ice Caps (南北极极度纯白冰盖)
+    drawLandPolygon([[-180, 75], [180, 75], [180, 90], [-180, 90]], '#ffffff', '#00f3ff');
+    drawLandPolygon([[-180, -70], [180, -70], [180, -90], [-180, -90]], '#ffffff', '#00f3ff');
 
-    // City Lights
-    ctx.fillStyle = '#ffcc00';
+    // Bright City Lights
+    ctx.fillStyle = '#ffeaa7';
     const cityLights = [
       [116.4, 39.9], [121.5, 31.2], [113.2, 23.1], [114.1, 22.3],
       [-74.0, 40.7], [-118.2, 34.0], [-80.6, 28.5],
@@ -213,23 +213,23 @@ class Globe3DEngine {
     cityLights.forEach(pt => {
       const p = ll2xy(pt[0], pt[1]);
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
       ctx.fill();
     });
 
     const canvasTexture = new THREE.CanvasTexture(canvas);
 
-    // Standard PBR Material for Smooth Non-blown-out Earth Surface
-    const earthMaterial = new THREE.MeshStandardMaterial({
+    // MeshPhongMaterial for Crystal-Clear Vivid Color Rendering & Ocean Specular Glare
+    const earthMaterial = new THREE.MeshPhongMaterial({
       map: canvasTexture,
-      roughness: 0.65,
-      metalness: 0.05
+      shininess: 35,
+      specular: new THREE.Color(0x00f3ff)
     });
 
     this.earth = new THREE.Mesh(geometry, earthMaterial);
     this.scene.add(this.earth);
 
-    // Load NASA Photorealistic Textures
+    // Load High-Res NASA Blue Marble Map Texture
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load(
       'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg',
@@ -238,44 +238,16 @@ class Globe3DEngine {
         earthMaterial.needsUpdate = true;
       }
     );
-
-    textureLoader.load(
-      'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_specular_2048.jpg',
-      (specularTexture) => {
-        earthMaterial.roughnessMap = specularTexture;
-        earthMaterial.needsUpdate = true;
-      }
-    );
-
-    // 3. Separate Cloud Layer Mesh (Normal Blending, No Exposure Washout)
-    const cloudsGeo = new THREE.SphereGeometry(radius * 1.01, 64, 64);
-    const cloudsMat = new THREE.MeshStandardMaterial({
-      transparent: true,
-      opacity: 0.32,
-      depthWrite: false,
-      blending: THREE.NormalBlending
-    });
-
-    this.cloudsMesh = new THREE.Mesh(cloudsGeo, cloudsMat);
-    this.scene.add(this.cloudsMesh);
-
-    textureLoader.load(
-      'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_clouds_2048.png',
-      (cloudsTexture) => {
-        cloudsMat.map = cloudsTexture;
-        cloudsMat.needsUpdate = true;
-      }
-    );
   }
 
   // Create Glow Atmosphere Outer Shell
   createAtmosphere() {
-    const radius = 8.32;
+    const radius = 8.35;
     const geometry = new THREE.SphereGeometry(radius, 48, 48);
     const material = new THREE.MeshBasicMaterial({
       color: 0x00f3ff,
       transparent: true,
-      opacity: 0.12,
+      opacity: 0.15,
       side: THREE.BackSide
     });
     this.atmosphere = new THREE.Mesh(geometry, material);
@@ -292,7 +264,7 @@ class Globe3DEngine {
       { name: '拜科努尔航天发射场', lon: 63.3, lat: 45.9, color: 0xffb400 }
     ];
 
-    const pinGeo = new THREE.SphereGeometry(0.12, 8, 8);
+    const pinGeo = new THREE.SphereGeometry(0.14, 8, 8);
 
     ports.forEach(port => {
       const rad = 8.05;
@@ -340,7 +312,7 @@ class Globe3DEngine {
     }
     this.satMeshList = [];
 
-    const satGeo = new THREE.SphereGeometry(0.13, 12, 12);
+    const satGeo = new THREE.SphereGeometry(0.14, 12, 12);
 
     satList.forEach((sat, index) => {
       const altScale = 8 + (sat.altitudeKm / 1000) * 1.2;
@@ -391,7 +363,7 @@ class Globe3DEngine {
 
       // Create Orbit Circle Line
       if (this.showOrbits) {
-        const lineMat = new THREE.LineBasicMaterial({ color: satColor, transparent: true, opacity: 0.18 });
+        const lineMat = new THREE.LineBasicMaterial({ color: satColor, transparent: true, opacity: 0.22 });
         const points = [];
         const segments = 64;
         for (let j = 0; j <= segments; j++) {
@@ -480,7 +452,6 @@ class Globe3DEngine {
 
     if (this.autoRotate && this.earth) {
       this.earth.rotation.y += 0.001;
-      if (this.cloudsMesh) this.cloudsMesh.rotation.y += 0.0012;
       this.satelliteGroup.rotation.y += 0.0008;
       this.orbitLinesGroup.rotation.y += 0.0008;
       this.spaceportsGroup.rotation.y += 0.001;
