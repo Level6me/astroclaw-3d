@@ -153,6 +153,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-sat-speed').textContent = `${satData.speedKms} km/s`;
     document.getElementById('modal-sat-inc').textContent = `${satData.inclination.toFixed(2)}°`;
     document.getElementById('modal-sat-period').textContent = `${satData.periodMinutes} 分钟`;
+
+    let launchTimeStr = '已成功在轨运行';
+    const intl = satData.intlDesig || '';
+    if (intl.startsWith('1998') || satData.noradId === 25544) launchTimeStr = '1998年11月20日';
+    else if (intl.startsWith('1990') || satData.noradId === 20580) launchTimeStr = '1990年04月24日';
+    else if (satData.noradId === 48274) launchTimeStr = '2021年04月29日'; // 天和核心舱
+    else if (satData.noradId === 53239) launchTimeStr = '2022年07月24日'; // 问天实验舱
+    else if (satData.noradId === 54216) launchTimeStr = '2022年10月31日'; // 梦天实验舱
+    else if (intl.length >= 4) {
+      const year = intl.substring(0, 4);
+      if (/^\d{4}$/.test(year)) launchTimeStr = `${year}年 (已发射入轨)`;
+    }
+    if (document.getElementById('modal-sat-launch-time')) {
+      document.getElementById('modal-sat-launch-time').textContent = launchTimeStr;
+    }
     
     if (document.getElementById('modal-sat-latlon')) {
       document.getElementById('modal-sat-latlon').textContent = `${satData.latStr || '0°N'}, ${satData.lonStr || '0°E'}`;
@@ -332,10 +347,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-launch-status').textContent = item.status || 'Go for Launch';
     document.getElementById('modal-launch-rocket').textContent = item.rocket || 'Falcon 9 Block 5';
     
-    const formattedDate = new Date(item.windowStart).toLocaleString('zh-CN', {
-      year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'
-    });
-    document.getElementById('modal-launch-time').textContent = `${formattedDate} UTC`;
+    const launchDate = new Date(item.windowStart);
+    const utcStr = launchDate.toISOString().replace('T', ' ').substring(0, 16) + ' (UTC)';
+    const localStr = launchDate.toLocaleString('zh-CN', {
+      year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
+    }) + ' (北京时间)';
+
+    document.getElementById('modal-launch-time').textContent = `${localStr} | ${utcStr}`;
     
     // Resolve hardware specs for specific rocket if missing
     let specs = { height: item.rocketHeight, thrust: item.rocketThrust, payloadLeo: item.payloadLeo };
