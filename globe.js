@@ -1,6 +1,6 @@
 /**
  * Three.js WebGL 3D Globe & Satellite Orbital Render Engine
- * NASA Photorealistic Blue Marble Earth, Cloud Layer, Atmosphere Glow, Spaceport Pins, and Real-time Satellite Lat/Lon.
+ * Photorealistic NASA Blue Marble Earth with Balanced Space Lighting (PBR Standard Material) to prevent overexposure.
  */
 class Globe3DEngine {
   constructor(containerId) {
@@ -46,7 +46,7 @@ class Globe3DEngine {
     this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     this.camera.position.set(0, 14, 24);
 
-    // 3. Renderer
+    // 3. Renderer with SRGB Output Color Space
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -59,16 +59,16 @@ class Globe3DEngine {
     this.controls.minDistance = 11;
     this.controls.maxDistance = 60;
 
-    // 5. Dynamic Lighting (Sunlight + Atmosphere Reflection)
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+    // 5. Balanced Dynamic Lighting (Prevents Overexposure Washout)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
     this.scene.add(ambientLight);
 
-    const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
-    sunLight.position.set(40, 20, 30);
+    const sunLight = new THREE.DirectionalLight(0xffffff, 0.95);
+    sunLight.position.set(30, 20, 25);
     this.scene.add(sunLight);
 
-    const blueRimLight = new THREE.DirectionalLight(0x00f3ff, 0.8);
-    blueRimLight.position.set(-40, -10, -30);
+    const blueRimLight = new THREE.DirectionalLight(0x00f3ff, 0.35);
+    blueRimLight.position.set(-30, -10, -25);
     this.scene.add(blueRimLight);
 
     // 6. Build Photorealistic NASA Earth, Cloud Shell, Glow & Spaceports
@@ -86,12 +86,12 @@ class Globe3DEngine {
     this.animate();
   }
 
-  // Create NASA Photorealistic Earth + Realistic Cloud Layer
+  // Create NASA Photorealistic Earth + Soft Cloud Layer
   createEarth() {
     const radius = 8;
     const geometry = new THREE.SphereGeometry(radius, 64, 64);
 
-    // 1. Procedural Realistic Photorealistic Base Texture (Green Land, Yellow Sahara, Blue Oceans, Cloud Swirls)
+    // 1. Procedural Realistic Base Canvas Map (Natural Land & Ocean Tones)
     const canvas = document.createElement('canvas');
     canvas.width = 2048;
     canvas.height = 1024;
@@ -100,11 +100,11 @@ class Globe3DEngine {
     const w = 2048;
     const h = 1024;
 
-    // Ocean Gradient
+    // Ocean Base Layer
     const oceanGrad = ctx.createLinearGradient(0, 0, 0, h);
-    oceanGrad.addColorStop(0, '#0a2342');
-    oceanGrad.addColorStop(0.5, '#123866');
-    oceanGrad.addColorStop(1, '#0a2342');
+    oceanGrad.addColorStop(0, '#091e3a');
+    oceanGrad.addColorStop(0.5, '#113254');
+    oceanGrad.addColorStop(1, '#091e3a');
     ctx.fillStyle = oceanGrad;
     ctx.fillRect(0, 0, w, h);
 
@@ -115,11 +115,11 @@ class Globe3DEngine {
       };
     }
 
-    // Grid Lines
-    ctx.strokeStyle = 'rgba(0, 243, 255, 0.22)';
+    // High-Tech Grid Lines
+    ctx.strokeStyle = 'rgba(0, 243, 255, 0.18)';
     ctx.lineWidth = 1;
     ctx.font = '16px JetBrains Mono, monospace';
-    ctx.fillStyle = 'rgba(0, 243, 255, 0.7)';
+    ctx.fillStyle = 'rgba(0, 243, 255, 0.6)';
 
     const lats = [66.5, 30, 0, -30, -66.5];
     const latLabels = ['66.5°N (北极圈)', '30°N', '0° (赤道 Equator)', '30°S', '66.5°S (南极圈)'];
@@ -143,7 +143,7 @@ class Globe3DEngine {
       ctx.fillText(lonLabels[idx], p.x + 6, h - 25);
     });
 
-    // Helper: Draw Photorealistic Landmasses with Natural Colors
+    // Draw Photorealistic Landmasses with Natural Tones
     function drawLandPolygon(pts, fillStyle = '#2d6a4f', strokeStyle = '#40916c') {
       ctx.fillStyle = fillStyle;
       ctx.strokeStyle = strokeStyle;
@@ -159,45 +159,45 @@ class Globe3DEngine {
       ctx.stroke();
     }
 
-    // Eurasia (亚欧大陆) - Rich Forest Green & Shading
+    // Eurasia (亚欧大陆)
     drawLandPolygon([
       [10, 36], [30, 31], [45, 12], [55, 25], [70, 20], [80, 10], [100, 5], [105, 10], 
       [120, 23], [122, 30], [125, 40], [130, 43], [140, 55], [170, 65], [180, 68],
       [180, 75], [100, 78], [60, 70], [30, 70], [10, 60], [-10, 52], [-9, 38]
-    ], '#2b580c', '#639a67');
+    ], '#2b580c', '#548c58');
 
-    // China & East Asia Highlight (绿色植被与中国轮廓)
+    // China & East Asia (中国与东亚区域)
     drawLandPolygon([
       [75, 38], [80, 45], [90, 48], [120, 53], [131, 43], [122, 30], [120, 23], 
       [110, 20], [108, 22], [100, 21], [92, 28], [80, 28], [75, 35]
     ], '#387c2b', '#00f3ff');
 
-    // Sahara & Middle East Desert (撒哈拉与中东黄色沙漠)
+    // Sahara Desert (撒哈拉沙漠)
     drawLandPolygon([
       [-17, 15], [10, 37], [35, 35], [55, 25], [45, 12], [30, 15], [10, 10]
-    ], '#d4a373', '#e9c46a');
+    ], '#c49a6c', '#d4a373');
 
-    // Central & South Africa (非洲中部热带雨林与南部)
+    // Central & South Africa (非洲雨林与南部)
     drawLandPolygon([
       [-17, 15], [10, 10], [30, 15], [40, -10], [33, -34], [18, -34], [12, -5], [8, 5]
     ], '#1b4332', '#2d6a4f');
 
-    // North America (北美洲绿植与加勒比)
+    // North America (北美洲)
     drawLandPolygon([
       [-168, 65], [-140, 60], [-125, 49], [-120, 34], [-105, 20], [-80, 25], 
       [-75, 35], [-65, 44], [-60, 47], [-64, 60], [-80, 65], [-110, 69]
-    ], '#2d5a27', '#52b788');
+    ], '#2d5a27', '#40916c');
 
-    // South America (南美洲亚马逊雨林)
+    // South America (南美洲)
     drawLandPolygon([
       [-80, 8], [-75, 11], [-60, 3], [-35, -5], [-38, -20], [-55, -35], 
       [-68, -55], [-75, -45], [-80, -4]
     ], '#1b4332', '#40916c');
 
-    // Australia & NZ (澳大利亚沙漠与绿洲)
+    // Australia (澳大利亚)
     drawLandPolygon([
       [114, -22], [130, -12], [142, -11], [153, -28], [148, -38], [115, -35]
-    ], '#c67d34', '#e9c46a');
+    ], '#b87333', '#d4a373');
 
     // Polar Ice Caps (南北极纯白冰盖)
     drawLandPolygon([[-180, 75], [180, 75], [180, 90], [-180, 90]], '#e0f1f7', '#ffffff');
@@ -219,16 +219,17 @@ class Globe3DEngine {
 
     const canvasTexture = new THREE.CanvasTexture(canvas);
 
-    const earthMaterial = new THREE.MeshPhongMaterial({
+    // Standard PBR Material for Smooth Non-blown-out Earth Surface
+    const earthMaterial = new THREE.MeshStandardMaterial({
       map: canvasTexture,
-      shininess: 40,
-      specular: new THREE.Color(0x3388cc)
+      roughness: 0.65,
+      metalness: 0.05
     });
 
     this.earth = new THREE.Mesh(geometry, earthMaterial);
     this.scene.add(this.earth);
 
-    // 2. Load Real Photorealistic NASA Textures from CDN
+    // Load NASA Photorealistic Textures
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load(
       'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg',
@@ -241,17 +242,18 @@ class Globe3DEngine {
     textureLoader.load(
       'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_specular_2048.jpg',
       (specularTexture) => {
-        earthMaterial.specularMap = specularTexture;
+        earthMaterial.roughnessMap = specularTexture;
         earthMaterial.needsUpdate = true;
       }
     );
 
-    // 3. Create Separate 3D Swirling Cloud Outer Shell Mesh
-    const cloudsGeo = new THREE.SphereGeometry(radius * 1.012, 64, 64);
-    const cloudsMat = new THREE.MeshPhongMaterial({
+    // 3. Separate Cloud Layer Mesh (Normal Blending, No Exposure Washout)
+    const cloudsGeo = new THREE.SphereGeometry(radius * 1.01, 64, 64);
+    const cloudsMat = new THREE.MeshStandardMaterial({
       transparent: true,
-      opacity: 0.45,
-      blending: THREE.AdditiveBlending
+      opacity: 0.32,
+      depthWrite: false,
+      blending: THREE.NormalBlending
     });
 
     this.cloudsMesh = new THREE.Mesh(cloudsGeo, cloudsMat);
@@ -268,12 +270,12 @@ class Globe3DEngine {
 
   // Create Glow Atmosphere Outer Shell
   createAtmosphere() {
-    const radius = 8.35;
+    const radius = 8.32;
     const geometry = new THREE.SphereGeometry(radius, 48, 48);
     const material = new THREE.MeshBasicMaterial({
       color: 0x00f3ff,
       transparent: true,
-      opacity: 0.18,
+      opacity: 0.12,
       side: THREE.BackSide
     });
     this.atmosphere = new THREE.Mesh(geometry, material);
@@ -478,7 +480,7 @@ class Globe3DEngine {
 
     if (this.autoRotate && this.earth) {
       this.earth.rotation.y += 0.001;
-      if (this.cloudsMesh) this.cloudsMesh.rotation.y += 0.0013; // Clouds rotate slightly faster for dynamic effect
+      if (this.cloudsMesh) this.cloudsMesh.rotation.y += 0.0012;
       this.satelliteGroup.rotation.y += 0.0008;
       this.orbitLinesGroup.rotation.y += 0.0008;
       this.spaceportsGroup.rotation.y += 0.001;
