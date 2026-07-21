@@ -348,13 +348,21 @@ class Globe3DEngine {
 
       // Color coding by group
       let satColor = 0x00f3ff;
-      if (sat.group === 'stations') satColor = 0xffb400;
-      else if (sat.group === 'beidou') satColor = 0xff3366;
+      let curSatGeo = satGeo;
+      const nameUpper = (sat.name || '').toUpperCase();
+
+      if (nameUpper.includes('天宫') || nameUpper.includes('CSS') || nameUpper.includes('TIANGONG') || nameUpper.includes('问天') || nameUpper.includes('梦天') || nameUpper.includes('天舟')) {
+        satColor = 0xff0044; // China Red for Tiangong Space Station & Modules
+        curSatGeo = new THREE.SphereGeometry(0.14, 12, 12);
+      } else if (sat.group === 'stations') {
+        satColor = 0xffb400; // Gold for ISS & Hubble
+        curSatGeo = new THREE.SphereGeometry(0.13, 12, 12);
+      } else if (sat.group === 'beidou') satColor = 0xff3366;
       else if (sat.group === 'gps-ops') satColor = 0x3b82f6;
       else if (sat.group === 'last-30-days') satColor = 0x00ff88;
 
       const mat = new THREE.MeshBasicMaterial({ color: satColor });
-      const mesh = new THREE.Mesh(satGeo, mat);
+      const mesh = new THREE.Mesh(curSatGeo, mat);
       mesh.position.set(x, y, z);
       mesh.userData = { satData: sat, originalColor: satColor };
 

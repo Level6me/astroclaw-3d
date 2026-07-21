@@ -117,3 +117,9 @@ I0721 20:10:43.670512 1195326 http_helpers.go:228] URL: https://daily-cloudcode-
 I0721 20:10:48.509580 1195326 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xd004f3e85098da77 ResponseID: xWFfarKjNZatz7IPhYTvGA
 I0721 20:10:57.322652 1195326 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x3f7f84c3b9c7fc88 ResponseID: zWFfaqHLMsuAz7IPxrawoQw
 I0721 20:11:02.839917 1195326 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xa34b54569ddce56c ResponseID: 1GFfaprALeKDz7IP-diXWQ
+I0721 20:11:09.909941 1195326 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xd0d63ed38760fbca ResponseID: 3GFfarqRA7yAz7IP9_fpmQ4
+I0721 20:11:16.485143 1195326 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x6bd3dc41e470583b ResponseID: 4WFfarfuN9-tz7IP1LChoAw
+I0721 20:11:30.549145 1195326 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x3a5c174d0bb96025 ResponseID: 8GFfavvbG5uDz7IPgvrzgQg
+I0721 20:11:33.916437 1195326 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x706a1672ef04df40 ResponseID: 9GFfatLpDPutz7IP8Pr0sQU
+I0721 20:11:35.594247 1195326 manager.go:682] CLI store manager shutting down
+I0721 20:11:35.595806 1195326 conversation_manager.go:540] Stopping conversation stream
