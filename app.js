@@ -1,5 +1,5 @@
 /**
- * AstroClaw 3D — Main Command Center Controller
+ * AstroClaw 3D — Main Command Center Controller (Desktop & Mobile Adaptive)
  * Connects Globe3D Engine, Space API, Audio Engine, and UI Widgets.
  */
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadSpaceWeatherChart();
   loadNasaApod();
   startUtcClock();
+  initMobileDrawers();
 
   // -------------------------------------------------------------
   // Load & Filter Satellites
@@ -48,13 +49,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // Filter Buttons Click Handling
   const filterButtons = document.querySelectorAll('#constellation-selector .btn-filter');
   filterButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', () => {
       filterButtons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
       if (window.spaceAudio) window.spaceAudio.playClick();
       currentGroup = btn.getAttribute('data-group');
       loadConstellation(currentGroup);
+
+      // Auto close mobile left drawer after selection on small screens
+      if (window.innerWidth < 1024) {
+        closeLeftDrawer();
+      }
     });
 
     btn.addEventListener('mouseenter', () => {
@@ -103,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const hoverTooltip = document.getElementById('sat-hover-tooltip');
 
   globe.onSatHoverCallback = (satData, mouseX, mouseY) => {
-    if (!satData) {
+    if (!satData || window.innerWidth < 768) { // Hide hover tooltip on touch screens
       hoverTooltip.classList.add('hidden');
       return;
     }
@@ -130,6 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-sat-tle').textContent = `${satData.tleLine1}\n${satData.tleLine2}`;
 
     modal.classList.remove('hidden');
+
+    // Close mobile drawers if open
+    closeLeftDrawer();
+    closeRightDrawer();
   };
 
   document.getElementById('btn-close-modal').addEventListener('click', () => {
@@ -148,6 +158,78 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  // -------------------------------------------------------------
+  // Mobile Drawers & Bottom Nav Bar Controls
+  // -------------------------------------------------------------
+  const leftSidebar = document.getElementById('sidebar-left');
+  const rightSidebar = document.getElementById('sidebar-right');
+
+  function openLeftDrawer() {
+    leftSidebar.classList.add('open');
+    rightSidebar.classList.remove('open');
+    if (window.spaceAudio) window.spaceAudio.playClick();
+  }
+
+  function closeLeftDrawer() {
+    leftSidebar.classList.remove('open');
+  }
+
+  function openRightDrawer() {
+    rightSidebar.classList.add('open');
+    leftSidebar.classList.remove('open');
+    if (window.spaceAudio) window.spaceAudio.playClick();
+  }
+
+  function closeRightDrawer() {
+    rightSidebar.classList.remove('open');
+  }
+
+  function initMobileDrawers() {
+    const btnToggleLeft = document.getElementById('btn-toggle-left-drawer');
+    const btnToggleRight = document.getElementById('btn-toggle-right-drawer');
+    const btnCloseLeft = document.getElementById('btn-close-left-drawer');
+    const btnCloseRight = document.getElementById('btn-close-right-drawer');
+
+    if (btnToggleLeft) btnToggleLeft.addEventListener('click', openLeftDrawer);
+    if (btnToggleRight) btnToggleRight.addEventListener('click', openRightDrawer);
+    if (btnCloseLeft) btnCloseLeft.addEventListener('click', closeLeftDrawer);
+    if (btnCloseRight) btnCloseRight.addEventListener('click', closeRightDrawer);
+
+    // Mobile Bottom Nav Buttons
+    const btnMobGlobe = document.getElementById('btn-mob-globe');
+    const btnMobSats = document.getElementById('btn-mob-sats');
+    const btnMobLaunches = document.getElementById('btn-mob-launches');
+    const btnMobWeather = document.getElementById('btn-mob-weather');
+
+    if (btnMobGlobe) {
+      btnMobGlobe.addEventListener('click', () => {
+        closeLeftDrawer();
+        closeRightDrawer();
+        globe.setPresetView('reset');
+      });
+    }
+
+    if (btnMobSats) {
+      btnMobSats.addEventListener('click', openLeftDrawer);
+    }
+
+    if (btnMobLaunches) {
+      btnMobLaunches.addEventListener('click', () => {
+        openRightDrawer();
+        const launchPanel = document.querySelector('.panel-card');
+        if (launchPanel) launchPanel.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+
+    if (btnMobWeather) {
+      btnMobWeather.addEventListener('click', () => {
+        openRightDrawer();
+        const weatherPanel = document.querySelectorAll('.panel-card')[1];
+        if (weatherPanel) weatherPanel.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+  }
 
   // -------------------------------------------------------------
   // Rocket Launch Command & Countdown Timer
@@ -174,12 +256,12 @@ document.addEventListener('DOMContentLoaded', () => {
       row.className = 'launch-row p-1.5 rounded bg-dark-glass border border-glass flex justify-between items-center text-xs';
       row.innerHTML = `
         <div class="truncate mr-2">
-          <div class="font-bold text-light truncate">${item.name}</div>
-          <div class="text-2xs text-dim">${item.rocket} • ${item.pad}</div>
+          <div class="font-bold text-light truncate text-2xs sm:text-xs">${item.name}</div>
+          <div class="text-3xs sm:text-2xs text-dim truncate">${item.rocket} • ${item.pad}</div>
         </div>
         <div class="text-right shrink-0">
-          <div class="text-2xs text-cyan font-mono">${dateStr}</div>
-          <div class="text-2xs text-green font-mono">${item.status}</div>
+          <div class="text-3xs sm:text-2xs text-cyan font-mono">${dateStr}</div>
+          <div class="text-3xs sm:text-2xs text-green font-mono">${item.status}</div>
         </div>
       `;
       listContainer.appendChild(row);
@@ -213,7 +295,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       countdownEl.textContent = `${dStr}d ${hStr}h ${mStr}m ${sStr}s`;
 
-      // Trigger warning sound if under 10 seconds
       if (days === 0 && hours === 0 && mins === 0 && secs <= 10 && secs > 0) {
         if (window.spaceAudio) window.spaceAudio.playAlertAlarm();
       }
@@ -237,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
       data: {
         labels: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00'],
         datasets: [{
-          label: 'Kp 指数 (Geomagnetic Index)',
+          label: 'Kp 指数',
           data: weather.kpValues,
           borderColor: '#00f3ff',
           backgroundColor: 'rgba(0, 243, 255, 0.1)',
@@ -272,36 +353,34 @@ document.addEventListener('DOMContentLoaded', () => {
   // -------------------------------------------------------------
   const btnToggleAudio = document.getElementById('btn-toggle-audio');
   const btnToggleAmbient = document.getElementById('btn-toggle-ambient');
-  const btnFullscreen = document.getElementById('btn-fullscreen');
 
-  btnToggleAudio.addEventListener('click', () => {
-    if (window.spaceAudio) {
-      const isMuted = window.spaceAudio.toggleMute();
-      document.getElementById('audio-status-label').textContent = isMuted ? '音效: 关' : '音效: 开';
-      btnToggleAudio.classList.toggle('opacity-50', isMuted);
-    }
-  });
+  if (btnToggleAudio) {
+    btnToggleAudio.addEventListener('click', () => {
+      if (window.spaceAudio) {
+        const isMuted = window.spaceAudio.toggleMute();
+        const label = document.getElementById('audio-status-label');
+        if (label) label.textContent = isMuted ? '音效: 关' : '音效: 开';
+        btnToggleAudio.classList.toggle('opacity-50', isMuted);
+      }
+    });
+  }
 
   let isAmbientOn = false;
-  btnToggleAmbient.addEventListener('click', () => {
-    isAmbientOn = !isAmbientOn;
-    if (window.spaceAudio) {
-      window.spaceAudio.toggleAmbient(isAmbientOn);
-      document.getElementById('ambient-status-label').textContent = isAmbientOn ? '背景音: 开' : '背景音: 关';
-      btnToggleAmbient.classList.toggle('text-purple', isAmbientOn);
-    }
-  });
-
-  btnFullscreen.addEventListener('click', () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-    } else {
-      if (document.exitFullscreen) document.exitFullscreen();
-    }
-  });
+  if (btnToggleAmbient) {
+    btnToggleAmbient.addEventListener('click', () => {
+      isAmbientOn = !isAmbientOn;
+      if (window.spaceAudio) {
+        window.spaceAudio.toggleAmbient(isAmbientOn);
+        const label = document.getElementById('ambient-status-label');
+        if (label) label.textContent = isAmbientOn ? '背景音: 开' : '背景音: 关';
+        btnToggleAmbient.classList.toggle('text-purple', isAmbientOn);
+      }
+    });
+  }
 
   function startUtcClock() {
     const clockEl = document.getElementById('utc-clock');
+    if (!clockEl) return;
     setInterval(() => {
       const now = new Date();
       const h = now.getUTCHours().toString().padStart(2, '0');
