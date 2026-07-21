@@ -195,8 +195,9 @@
           <i class="fa-solid fa-satellite"></i>
           <span id="tooltip-name">STARLINK-3012</span>
         </div>
-        <div class="text-dim text-2xs mt-1">NORAD ID: <span id="tooltip-norad" class="text-light">52001</span></div>
-        <div class="text-dim text-2xs">高度: <span id="tooltip-alt" class="text-gold">550.2 km</span></div>
+        <div class="text-dim text-2xs mt-1">NORAD ID: <span id="tooltip-norad" class="text-light">52001</span> | 高度: <span id="tooltip-alt" class="text-gold">550.2 km</span></div>
+        <div class="text-dim text-2xs mt-0.5"><i class="fa-solid fa-location-crosshairs text-cyan mr-1"></i><span id="tooltip-latlon" class="text-cyan font-bold">31.2°N, 121.5°E</span></div>
+        <div class="text-dim text-3xs mt-0.5"><span id="tooltip-region" class="text-green font-semibold">🇨🇳 中国及周边东亚区域</span></div>
       </div>
 
       <!-- Quick 3D View Reset Toolbar (Mobile Touch Optimized) -->
@@ -365,7 +366,15 @@
         <div class="bg-dark-glass p-2 sm:p-2.5 rounded border border-glass">
           <span class="text-dim text-2xs">运行周期:</span>
           <div id="modal-sat-period" class="text-xs sm:text-sm font-bold text-purple mt-0.5">95.4 分钟</div>
+      </div>
+
+      <!-- Real-time Geographic Position Box -->
+      <div class="bg-dark-glass p-2.5 rounded border border-glass font-mono text-xs space-y-1">
+        <div class="text-dim text-2xs uppercase tracking-wider flex justify-between items-center">
+          <span><i class="fa-solid fa-earth-asia text-cyan mr-1"></i> 当前过境地理坐标 (Real-time Location)</span>
+          <span id="modal-sat-region" class="text-green text-3xs font-bold">🇨🇳 中国及周边东亚区域</span>
         </div>
+        <div id="modal-sat-latlon" class="text-cyan font-bold text-xs sm:text-sm">31.2°N, 121.5°E</div>
       </div>
 
       <!-- TLE Raw Code Block -->
@@ -460,9 +469,9 @@
   </div>
 
   <!-- Scripts -->
-  <script src="audio.js?v=1.0.6"></script>
-  <script src="api.js?v=1.0.6"></script>
-  <script src="globe.js?v=1.0.6"></script>
-  <script src="app.js?v=1.0.6"></script>
+  <script src="audio.js?v=1.0.7"></script>
+  <script src="api.js?v=1.0.7"></script>
+  <script src="globe.js?v=1.0.7"></script>
+  <script src="app.js?v=1.0.7"></script>
 </body>
 </html>

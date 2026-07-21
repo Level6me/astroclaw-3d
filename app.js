@@ -116,6 +116,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('tooltip-name').textContent = satData.name;
     document.getElementById('tooltip-norad').textContent = satData.noradId;
     document.getElementById('tooltip-alt').textContent = `${satData.altitudeKm} km`;
+    
+    if (document.getElementById('tooltip-latlon')) {
+      document.getElementById('tooltip-latlon').textContent = `${satData.latStr || '0°N'}, ${satData.lonStr || '0°E'}`;
+    }
+    if (document.getElementById('tooltip-region')) {
+      document.getElementById('tooltip-region').textContent = satData.locationRegion || '大海开阔洋面上空';
+    }
 
     hoverTooltip.style.left = `${mouseX + 15}px`;
     hoverTooltip.style.top = `${mouseY + 15}px`;
@@ -133,6 +140,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-sat-speed').textContent = `${satData.speedKms} km/s`;
     document.getElementById('modal-sat-inc').textContent = `${satData.inclination.toFixed(2)}°`;
     document.getElementById('modal-sat-period').textContent = `${satData.periodMinutes} 分钟`;
+    
+    if (document.getElementById('modal-sat-latlon')) {
+      document.getElementById('modal-sat-latlon').textContent = `${satData.latStr || '0°N'}, ${satData.lonStr || '0°E'}`;
+    }
+    if (document.getElementById('modal-sat-region')) {
+      document.getElementById('modal-sat-region').textContent = satData.locationRegion || '大海开阔洋面上空';
+    }
+
     document.getElementById('modal-sat-tle').textContent = `${satData.tleLine1}\n${satData.tleLine2}`;
 
     modal.classList.remove('hidden');
