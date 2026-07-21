@@ -387,6 +387,59 @@
     </div>
   </div>
 
+  <!-- Modal: Detailed Rocket Launch Information Card -->
+  <div id="modal-launch-detail" class="modal-overlay hidden fixed inset-0 z-50 flex items-center justify-center bg-black-75 backdrop-blur-sm p-4">
+    <div class="modal-content w-full max-w-lg bg-glass-panel border border-gold rounded-lg p-5 sm:p-6 shadow-2xl space-y-4 relative animate-fade-in max-h-90vh overflow-y-auto">
+      
+      <!-- Close Button -->
+      <button id="btn-close-launch-modal" class="absolute top-4 right-4 text-dim hover:text-gold text-lg p-1">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Header -->
+      <div class="flex items-center space-x-3 pr-6">
+        <div class="p-3 bg-amber-900/40 rounded border border-gold shrink-0">
+          <i class="fa-solid fa-rocket text-gold text-2xl"></i>
+        </div>
+        <div class="truncate">
+          <h3 id="modal-launch-name" class="text-base sm:text-lg font-bold text-light font-outfit uppercase truncate">SpaceX Falcon 9</h3>
+          <p class="text-xs text-dim font-mono flex items-center gap-2 mt-0.5">
+            <span id="modal-launch-country" class="text-cyan font-bold">🇺🇸 美国</span>
+            <span>•</span>
+            <span id="modal-launch-company" class="text-purple-300 font-semibold">SpaceX</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Main Parameters Grid -->
+      <div class="grid grid-cols-2 gap-2.5 text-xs font-mono">
+        <div class="bg-dark-glass p-2.5 rounded border border-glass">
+          <span class="text-dim text-2xs">发射状态:</span>
+          <div id="modal-launch-status" class="text-xs sm:text-sm font-bold text-green mt-0.5">Go for Launch</div>
+        </div>
+        <div class="bg-dark-glass p-2.5 rounded border border-glass">
+          <span class="text-dim text-2xs">运载火箭:</span>
+          <div id="modal-launch-rocket" class="text-xs sm:text-sm font-bold text-gold mt-0.5 truncate">Falcon 9 Block 5</div>
+        </div>
+        <div class="bg-dark-glass p-2.5 rounded border border-glass">
+          <span class="text-dim text-2xs">预计发射时间 (UTC):</span>
+          <div id="modal-launch-time" class="text-xs sm:text-sm font-bold text-cyan mt-0.5 truncate">2026-07-21 14:30</div>
+        </div>
+        <div class="bg-dark-glass p-2.5 rounded border border-glass">
+          <span class="text-dim text-2xs">发射服务商/机构:</span>
+          <div id="modal-launch-lsp" class="text-xs sm:text-sm font-bold text-purple mt-0.5 truncate">SpaceX</div>
+        </div>
+      </div>
+
+      <!-- Launch Pad Box -->
+      <div class="bg-dark-glass p-3 rounded border border-glass font-mono text-xs space-y-1">
+        <div class="text-dim text-2xs uppercase tracking-wider"><i class="fa-solid fa-location-dot text-cyan mr-1"></i> 发射场与发射台位置</div>
+        <div id="modal-launch-pad" class="text-light font-semibold">Kennedy Space Center LC-39A, Florida</div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="audio.js"></script>
   <script src="api.js"></script>

@@ -250,6 +250,15 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('launch-company').textContent = next.company || 'SpaceX';
     }
 
+    // Click main launch countdown box to show modal
+    const mainLaunchBox = document.querySelector('.next-launch-box');
+    if (mainLaunchBox) {
+      mainLaunchBox.classList.add('cursor-pointer', 'hover:border-gold', 'transition-colors');
+      mainLaunchBox.addEventListener('click', () => {
+        showLaunchDetailModal(next);
+      });
+    }
+
     // Start Countdown
     startLaunchCountdown(next.windowStart);
 
@@ -261,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const dateStr = new Date(item.windowStart).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
       const flagIcon = item.flag || '🇺🇸';
       const row = document.createElement('div');
-      row.className = 'launch-row p-2 rounded bg-dark-glass border border-glass flex justify-between items-center text-xs space-x-2';
+      row.className = 'launch-row p-2 rounded bg-dark-glass border border-glass flex justify-between items-center text-xs space-x-2 cursor-pointer hover:border-gold transition-colors';
       row.innerHTML = `
         <div class="truncate flex-1">
           <div class="font-bold text-light truncate text-2xs sm:text-xs">${item.name}</div>
@@ -274,7 +283,43 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="text-3xs text-green font-mono">${item.status}</div>
         </div>
       `;
+
+      row.addEventListener('click', () => {
+        showLaunchDetailModal(item);
+      });
+
       listContainer.appendChild(row);
+    });
+  }
+
+  // Show Launch Detail Modal
+  function showLaunchDetailModal(item) {
+    if (window.spaceAudio) window.spaceAudio.playRadarPing();
+    const modal = document.getElementById('modal-launch-detail');
+    if (!modal) return;
+
+    document.getElementById('modal-launch-name').textContent = item.name;
+    document.getElementById('modal-launch-country').textContent = `${item.flag || '🇺🇸'} ${item.country || '美国'}`;
+    document.getElementById('modal-launch-company').textContent = item.company || item.lsp || 'SpaceX';
+    document.getElementById('modal-launch-status').textContent = item.status || 'Go for Launch';
+    document.getElementById('modal-launch-rocket').textContent = item.rocket || 'Falcon 9 Block 5';
+    
+    const formattedDate = new Date(item.windowStart).toLocaleString('zh-CN', {
+      year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    document.getElementById('modal-launch-time').textContent = `${formattedDate} UTC`;
+    document.getElementById('modal-launch-lsp').textContent = item.lsp || item.company || 'SpaceX';
+    document.getElementById('modal-launch-pad').textContent = item.pad || 'Kennedy Space Center LC-39A';
+
+    modal.classList.remove('hidden');
+  }
+
+  const btnCloseLaunchModal = document.getElementById('btn-close-launch-modal');
+  if (btnCloseLaunchModal) {
+    btnCloseLaunchModal.addEventListener('click', () => {
+      if (window.spaceAudio) window.spaceAudio.playClick();
+      const modal = document.getElementById('modal-launch-detail');
+      if (modal) modal.classList.add('hidden');
     });
   }
 
