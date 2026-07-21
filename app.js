@@ -308,8 +308,24 @@ document.addEventListener('DOMContentLoaded', () => {
       year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'
     });
     document.getElementById('modal-launch-time').textContent = `${formattedDate} UTC`;
-    document.getElementById('modal-launch-lsp').textContent = item.lsp || item.company || 'SpaceX';
+    
+    if (document.getElementById('modal-launch-orbit')) {
+      document.getElementById('modal-launch-orbit').textContent = item.orbit || '近地轨道 (LEO)';
+    }
+    if (document.getElementById('modal-launch-specs')) {
+      document.getElementById('modal-launch-specs').textContent = `${item.rocketHeight || '70.0米'} • ${item.rocketThrust || '7,607 kN'}`;
+    }
+    if (document.getElementById('modal-launch-webcast')) {
+      document.getElementById('modal-launch-webcast').textContent = item.webcast || '📡 信号准备就绪';
+    }
+    if (document.getElementById('modal-launch-pad-loc')) {
+      document.getElementById('modal-launch-pad-loc').textContent = item.padLocation || 'Florida, USA';
+    }
     document.getElementById('modal-launch-pad').textContent = item.pad || 'Kennedy Space Center LC-39A';
+    
+    if (document.getElementById('modal-launch-desc')) {
+      document.getElementById('modal-launch-desc').textContent = item.description || '本任务将把载荷成功运送至指定目标轨道。';
+    }
 
     modal.classList.remove('hidden');
   }

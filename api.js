@@ -1,7 +1,7 @@
 /**
  * Real-time Space Data API Integration Engine
  * Connects Celestrak, Launch Library 2, SpaceX, NASA APOD, and NOAA Space Weather APIs.
- * Includes Country & Launch Service Provider (Company) resolution.
+ * Fully extracts rich mission descriptions, rocket hardware specs, and orbit details.
  */
 class SpaceApiService {
   constructor() {
@@ -146,16 +146,25 @@ class SpaceApiService {
       const data = await res.json();
       return data.results.map((item) => {
         const { country, flag, company } = this.resolveCountryAndCompany(item);
+        const config = item.rocket?.configuration;
+
         return {
           name: item.name || 'Falcon 9 - Starlink Launch',
           windowStart: item.window_start || new Date(Date.now() + 36000000).toISOString(),
           status: item.status?.name || 'Go for Launch',
-          rocket: item.rocket?.configuration?.name || 'Falcon 9 Block 5',
+          rocket: config?.name || 'Falcon 9 Block 5',
           pad: item.pad?.name || 'Kennedy Space Center LC-39A',
+          padLocation: item.pad?.location?.name || 'Florida, USA',
           lsp: item.launch_service_provider?.name || 'SpaceX',
           country: country,
           flag: flag,
-          company: company
+          company: company,
+          description: item.mission?.description || '本任务将运载新一代卫星入轨，拓展空间网络通信与科研能力。',
+          missionType: item.mission?.type || '通信与空间观测 (Communications)',
+          orbit: item.mission?.orbit?.name || '近地轨道 (LEO - Low Earth Orbit)',
+          rocketHeight: config?.length ? `${config.length} 米` : '70.0 米',
+          rocketThrust: config?.to_thrust ? `${config.to_thrust.toLocaleString()} kN` : '7,607 kN',
+          webcast: item.webcast_live ? '🔴 正在直播中' : '📡 准备就绪 (Live Webcast Ready)'
         };
       });
     } catch (err) {
@@ -169,10 +178,17 @@ class SpaceApiService {
           status: 'Scheduled',
           rocket: 'Falcon 9 Block 5',
           pad: 'Cape Canaveral SLC-40',
+          padLocation: 'Florida, USA',
           lsp: 'SpaceX',
           country: '🇺🇸 美国',
           flag: '🇺🇸',
-          company: 'SpaceX'
+          company: 'SpaceX',
+          description: 'SpaceX 猎鹰九号火箭将把新一批 Starlink 互联网卫星送入低地球轨道。',
+          missionType: '通信巨星座部署 (Communications)',
+          orbit: '近地轨道 (LEO - Low Earth Orbit)',
+          rocketHeight: '70.0 米',
+          rocketThrust: '7,607 kN',
+          webcast: '📡 官方直播准备就绪'
         }));
       } catch (err2) {
         return this.generateFallbackLaunches();
@@ -189,21 +205,35 @@ class SpaceApiService {
         status: 'Go for Launch (准许)',
         rocket: 'Falcon 9 Block 5',
         pad: 'KSC LC-39A',
+        padLocation: 'Florida, USA',
         lsp: 'SpaceX',
         country: '🇺🇸 美国',
         flag: '🇺🇸',
-        company: 'SpaceX'
+        company: 'SpaceX',
+        description: 'SpaceX 猎鹰九号运载火箭将部署 22 颗 Starlink V2 Mini 卫星入轨，提供全球宽带信号覆盖。',
+        missionType: '卫星通信星座 (Communications)',
+        orbit: '近地轨道 (LEO - Low Earth Orbit)',
+        rocketHeight: '70.0 米',
+        rocketThrust: '7,607 kN',
+        webcast: '📡 官方直播准备就绪'
       },
       {
         name: '长征五号乙 • 天宫空间站巡天望远镜 (CSST)',
         windowStart: new Date(now + 48 * 3600000).toISOString(),
         status: 'Scheduled (排期)',
-        rocket: 'Long March 5B',
-        pad: '文昌发射场 101工位',
-        lsp: 'CASC',
+        rocket: 'Long March 5B (长征五号乙)',
+        pad: '文昌航天发射场 101工位',
+        padLocation: '海南文昌, 中国',
+        lsp: 'CASC (中国航天科技集团)',
         country: '🇨🇳 中国',
         flag: '🇨🇳',
-        company: 'CASC (中国航天)'
+        company: 'CASC (中国航天)',
+        description: '长征五号乙运载火箭将发射中国天宫空间站巡天光学望远镜（CSST），进行大规模深空巡天观测。',
+        missionType: '天文学与深空探索 (Astrophysics)',
+        orbit: '近地轨巡天轨道 (LEO Co-orbital)',
+        rocketHeight: '53.7 米',
+        rocketThrust: '10,562 kN',
+        webcast: '📡 官方直播准备就绪'
       },
       {
         name: 'Ariane 6 • Galileo L13 Missions',
@@ -211,10 +241,17 @@ class SpaceApiService {
         status: 'Go for Launch',
         rocket: 'Ariane 62',
         pad: 'Kourou ELA-4',
+        padLocation: '法属圭亚那, 库鲁',
         lsp: 'Arianespace',
         country: '🇪🇺 欧洲 / 法国',
         flag: '🇪🇺',
-        company: 'Arianespace'
+        company: 'Arianespace',
+        description: '欧洲阿利亚娜 62 型火箭将部署伽利略导航卫星，增强欧盟全球卫星定位服务。',
+        missionType: '导航与定位 (Navigation)',
+        orbit: '中地球轨道 (MEO - Medium Earth Orbit)',
+        rocketHeight: '63.0 米',
+        rocketThrust: '8,000 kN',
+        webcast: '📡 官方直播准备就绪'
       },
       {
         name: 'Rocket Lab Electron • Owl Night Long',
@@ -222,10 +259,17 @@ class SpaceApiService {
         status: 'Scheduled',
         rocket: 'Electron',
         pad: 'LC-1A, 新西兰',
+        padLocation: '马西亚半岛, 新西兰',
         lsp: 'Rocket Lab',
         country: '🇳🇿 新西兰',
         flag: '🇳🇿',
-        company: 'Rocket Lab'
+        company: 'Rocket Lab',
+        description: 'Rocket Lab 电子号微型运载火箭将运载商业合成孔径雷达（SAR）卫星入轨。',
+        missionType: '合成孔径雷达遥感 (Earth Observation)',
+        orbit: '太阳同步轨道 (SSO - Sun-Synchronous)',
+        rocketHeight: '18.0 米',
+        rocketThrust: '224 kN',
+        webcast: '📡 官方直播准备就绪'
       }
     ];
   }
