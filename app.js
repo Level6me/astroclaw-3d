@@ -373,6 +373,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Close modals on overlay backdrop click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.classList.add('hidden');
+        if (window.spaceAudio) window.spaceAudio.playClick();
+      }
+    });
+  });
+
+  // Close modals on ESC key
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.add('hidden'));
+    }
+  });
+
   function startLaunchCountdown(targetIsoDate) {
     if (countdownInterval) clearInterval(countdownInterval);
 

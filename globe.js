@@ -1,6 +1,6 @@
 /**
  * Three.js WebGL 3D Globe & Satellite Orbital Render Engine
- * Elimination of Specular Glare Discs & Crisp NASA Blue Marble Texturing.
+ * Features Generous Proximity Hit-Testing for Mobile Touchscreens & Zero Glare NASA Blue Marble Texturing.
  */
 class Globe3DEngine {
   constructor(containerId) {
@@ -58,7 +58,7 @@ class Globe3DEngine {
     this.controls.minDistance = 11;
     this.controls.maxDistance = 60;
 
-    // 5. Clean Dynamic Lighting (Zero Glare Discs)
+    // 5. Dynamic Lighting (Clean Space Ambient)
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
     this.scene.add(ambientLight);
 
@@ -76,10 +76,11 @@ class Globe3DEngine {
     this.createAtmosphere();
     this.createSpaceportMarkers();
 
-    // 7. Event Listeners
+    // 7. Event Listeners (Mouse & Touch Responsive)
     window.addEventListener('resize', () => this.onWindowResize());
     this.renderer.domElement.addEventListener('mousemove', (e) => this.onMouseMove(e));
     this.renderer.domElement.addEventListener('click', (e) => this.onMouseClick(e));
+    this.renderer.domElement.addEventListener('touchend', (e) => this.onTouchEnd(e), { passive: true });
 
     // 8. Render Loop
     this.animate();
@@ -158,14 +159,14 @@ class Globe3DEngine {
       ctx.stroke();
     }
 
-    // Eurasia (亚欧大陆 - 鲜艳森林绿)
+    // Eurasia (亚欧大陆)
     drawLandPolygon([
       [10, 36], [30, 31], [45, 12], [55, 25], [70, 20], [80, 10], [100, 5], [105, 10], 
       [120, 23], [122, 30], [125, 40], [130, 43], [140, 55], [170, 65], [180, 68],
       [180, 75], [100, 78], [60, 70], [30, 70], [10, 60], [-10, 52], [-9, 38]
     ], '#1b7a42', '#38ef7d');
 
-    // China & East Asia (中国及周边区域 - 高亮翠绿)
+    // China & East Asia (中国及周边区域)
     drawLandPolygon([
       [75, 38], [80, 45], [90, 48], [120, 53], [131, 43], [122, 30], [120, 23], 
       [110, 20], [108, 22], [100, 21], [92, 28], [80, 28], [75, 35]
@@ -218,7 +219,7 @@ class Globe3DEngine {
 
     const canvasTexture = new THREE.CanvasTexture(canvas);
 
-    // MeshPhongMaterial with Subtle Water Reflection (No Blown-out Glare Discs)
+    // MeshPhongMaterial with Subtle Water Reflection
     const earthMaterial = new THREE.MeshPhongMaterial({
       map: canvasTexture,
       shininess: 12,
@@ -299,7 +300,7 @@ class Globe3DEngine {
     this.scene.add(stars);
   }
 
-  // Populate Satellites in 3D Space & Calculate Real-time Lat/Lon
+  // Populate Satellites in 3D Space & Calculate Real-time Lat/Lon (Kepler Orbital Equations)
   updateSatellites(satList) {
     this.satellitesData = satList;
 
@@ -311,7 +312,7 @@ class Globe3DEngine {
     }
     this.satMeshList = [];
 
-    const satGeo = new THREE.SphereGeometry(0.14, 12, 12);
+    const satGeo = new THREE.SphereGeometry(0.18, 12, 12); // Slightly larger touch area
 
     satList.forEach((sat, index) => {
       const altScale = 8 + (sat.altitudeKm / 1000) * 1.2;
@@ -323,7 +324,7 @@ class Globe3DEngine {
       const y = altScale * (Math.sin(meanRad) * Math.sin(incRad));
       const z = altScale * (Math.sin(raanRad) * Math.cos(meanRad) + Math.cos(raanRad) * Math.sin(meanRad) * Math.cos(incRad));
 
-      // Calculate Latitude & Longitude
+      // Calculate Real-time Latitude & Longitude
       const r = Math.sqrt(x * x + y * y + z * z);
       const latVal = (Math.asin(y / r) * 180) / Math.PI;
       let lonVal = (Math.atan2(z, x) * 180) / Math.PI;
@@ -379,17 +380,40 @@ class Globe3DEngine {
     });
   }
 
+  // Generous Proximity Hit-Testing Algorithm for Touchscreens & Mouse
+  getIntersectedSatellite() {
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    const intersectsList = this.raycaster.intersectObjects(this.satMeshList);
+
+    if (intersectsList.length > 0) {
+      return intersectsList[0].object;
+    }
+
+    // Proximity search if exact ray hits nothing (Generous 1.6-unit hit radius)
+    let closestMesh = null;
+    let minDistance = 1.6;
+
+    const ray = this.raycaster.ray;
+    this.satMeshList.forEach(mesh => {
+      const dist = ray.distanceToPoint(mesh.position);
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestMesh = mesh;
+      }
+    });
+
+    return closestMesh;
+  }
+
   // Mouse Move Raycasting for Tooltip Hover
   onMouseMove(event) {
     const rect = this.renderer.domElement.getBoundingClientRect();
     this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
-    this.raycaster.setFromCamera(this.mouse, this.camera);
-    const intersects = this.raycaster.intersectObjects(this.satMeshList);
+    const hit = this.getIntersectedSatellite();
 
-    if (intersects.length > 0) {
-      const hit = intersects[0].object;
+    if (hit) {
       this.container.style.cursor = 'pointer';
       if (this.onSatHoverCallback) {
         this.onSatHoverCallback(hit.userData.satData, event.clientX, event.clientY);
@@ -402,16 +426,30 @@ class Globe3DEngine {
     }
   }
 
-  // Mouse Click Selection
+  // Mouse & Touch Click Selection
   onMouseClick(event) {
-    this.raycaster.setFromCamera(this.mouse, this.camera);
-    const intersectsList = this.raycaster.intersectObjects(this.satMeshList);
-
-    if (intersectsList.length > 0) {
-      const hit = intersectsList[0].object;
+    const hit = this.getIntersectedSatellite();
+    if (hit) {
       if (window.spaceAudio) window.spaceAudio.playRadarPing();
       if (this.onSatClickCallback) {
         this.onSatClickCallback(hit.userData.satData);
+      }
+    }
+  }
+
+  onTouchEnd(event) {
+    if (event.changedTouches && event.changedTouches.length > 0) {
+      const touch = event.changedTouches[0];
+      const rect = this.renderer.domElement.getBoundingClientRect();
+      this.mouse.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+      this.mouse.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+
+      const hit = this.getIntersectedSatellite();
+      if (hit) {
+        if (window.spaceAudio) window.spaceAudio.playRadarPing();
+        if (this.onSatClickCallback) {
+          this.onSatClickCallback(hit.userData.satData);
+        }
       }
     }
   }
