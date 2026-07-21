@@ -432,7 +432,6 @@ class Globe3DEngine {
   // Mouse Click Selection
   onMouseClick(event) {
     this.raycaster.setFromCamera(this.mouse, this.camera);
-    const intersects.length > 0 && intersects;
     const intersectsList = this.raycaster.intersectObjects(this.satMeshList);
 
     if (intersectsList.length > 0) {
