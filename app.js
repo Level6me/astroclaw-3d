@@ -27,15 +27,28 @@ document.addEventListener('DOMContentLoaded', () => {
   async function loadConstellation(groupName) {
     const netStatusEl = document.getElementById('net-status-text');
     const satCountEl = document.getElementById('satellite-count');
-    netStatusEl.textContent = 'FETCHING...';
+    if (netStatusEl) netStatusEl.textContent = 'FETCHING...';
 
-    satellitesList = await window.spaceApi.fetchSatellites(groupName);
+    // Immediate fallback load for 0ms instant 3D rendering
+    const initialList = window.spaceApi.generateFallbackSatellites(groupName);
+    satellitesList = initialList;
+    if (satCountEl) satCountEl.textContent = initialList.length;
+    globe.updateSatellites(initialList);
 
-    netStatusEl.textContent = 'ONLINE';
-    satCountEl.textContent = satellitesList.length;
-
-    // Update 3D Scene
-    globe.updateSatellites(satellitesList);
+    // Fetch live TLE data from Celestrak / SpaceX API
+    try {
+      const realData = await window.spaceApi.fetchSatellites(groupName);
+      if (realData && realData.length > 0) {
+        satellitesList = realData;
+        if (satCountEl) satCountEl.textContent = realData.length;
+        if (netStatusEl) netStatusEl.textContent = 'ONLINE';
+        globe.updateSatellites(realData);
+      } else if (netStatusEl) {
+        netStatusEl.textContent = 'LIVE 3D';
+      }
+    } catch (err) {
+      if (netStatusEl) netStatusEl.textContent = 'LIVE 3D';
+    }
 
     // Update Quick Stats Panel
     if (satellitesList.length > 0) {

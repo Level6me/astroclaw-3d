@@ -125,3 +125,13 @@ I0721 12:36:07.747759 1019637 http_helpers.go:228] URL: https://daily-cloudcode-
 I0721 12:36:11.153339 1019637 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xff3e824960504c00 ResponseID: OfdeaojXKYSgz7IPmLT_8Ac
 I0721 12:36:14.456395 1019637 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xb3be58a1ed6c64f2 ResponseID: PPdeauyjMsHfz7IPmLzfuQw
 I0721 12:36:17.671865 1019637 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x272c493cae8afe87 ResponseID: QPdeaq3-B8-oqtsPhJb14Ag
+I0721 12:36:23.758313 1019637 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xb0b6dd598131441a ResponseID: RvdeaqGQEvufz7IP3r_Z6As
+I0721 12:36:28.907928 1019637 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x68e5a4d55fcb4918 ResponseID: S_deauTbEtTRz7IPrtjo0QY
+I0721 12:36:42.753236 1019637 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x1f0aea0473b0d20e ResponseID: WPdeasihMu2hz7IPro_uWA
+I0721 12:36:45.889906 1019637 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x943ab66469dd2c76 ResponseID: XPdeavvYIfaHz7IP1fS_wQ4
+I0721 12:36:47.538853 1019637 manager.go:682] CLI store manager shutting down
+I0721 12:36:47.540129 1019637 conversation_manager.go:540] Stopping conversation stream
+I0721 12:36:47.540425 1019637 server.go:966] Stream goroutine exited for f81ffb5c-0700-467d-8e90-5d6ca2f6d649, sending completion signal
+I0721 12:36:47.540478 1019637 conversation_manager.go:661] Stream completed for f81ffb5c-0700-467d-8e90-5d6ca2f6d649, clearing ResponsePending
+I0721 12:36:47.541646 1019637 server.go:2454] Language server shutting down
+I0721 12:36:47.541714 1019637 server.go:2459] Waiting for migrations to complete to prevent partial migration state...
