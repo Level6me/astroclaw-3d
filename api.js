@@ -15,24 +15,32 @@ class SpaceApiService {
 
   // Verified Rocket Hardware Specs Database & Resolver
   resolveRocketSpecs(rocketName = '', config = {}) {
-    let height = config?.length ? `${config.length} 米` : null;
-    let thrust = config?.to_thrust ? `${config.to_thrust.toLocaleString()} kN` : null;
-    let payloadLeo = config?.leo_capacity ? `${config.leo_capacity.toLocaleString()} kg` : null;
+    let height = (config && typeof config.length === 'number') ? `${config.length} 米` : null;
+    let thrust = (config && typeof config.to_thrust === 'number') ? `${config.to_thrust.toLocaleString()} kN` : null;
+    let payloadLeo = (config && typeof config.leo_capacity === 'number') ? `${config.leo_capacity.toLocaleString()} kg` : null;
 
-    const name = (rocketName + ' ' + (config?.name || '')).toLowerCase();
+    const name = (String(rocketName || '') + ' ' + String(config?.name || '') + ' ' + String(config?.full_name || '')).toLowerCase();
 
-    if (name.includes('long march 5') || name.includes('长征五号') || name.includes('cz-5')) {
+    if (name.includes('long march 5') || name.includes('长征五号') || name.includes('cz-5') || name.includes('cz 5')) {
       if (!height) height = '53.7 米';
       if (!thrust) thrust = '10,562 kN';
       if (!payloadLeo) payloadLeo = '25,000 kg';
-    } else if (name.includes('long march 2') || name.includes('长征二号') || name.includes('cz-2')) {
+    } else if (name.includes('long march 2') || name.includes('长征二号') || name.includes('cz-2') || name.includes('cz 2')) {
       if (!height) height = '62.0 米';
       if (!thrust) thrust = '5,923 kN';
       if (!payloadLeo) payloadLeo = '8,400 kg';
-    } else if (name.includes('long march 7') || name.includes('长征七号') || name.includes('cz-7')) {
+    } else if (name.includes('long march 7') || name.includes('长征七号') || name.includes('cz-7') || name.includes('cz 7')) {
       if (!height) height = '53.1 米';
       if (!thrust) thrust = '7,200 kN';
       if (!payloadLeo) payloadLeo = '13,500 kg';
+    } else if (name.includes('long march 6') || name.includes('长征六号') || name.includes('cz-6')) {
+      if (!height) height = '29.3 米';
+      if (!thrust) thrust = '1,200 kN';
+      if (!payloadLeo) payloadLeo = '1,500 kg';
+    } else if (name.includes('long march 11') || name.includes('长征十一号') || name.includes('cz-11')) {
+      if (!height) height = '20.8 米';
+      if (!thrust) thrust = '1,200 kN';
+      if (!payloadLeo) payloadLeo = '500 kg';
     } else if (name.includes('electron') || name.includes('电子号')) {
       if (!height) height = '18.0 米';
       if (!thrust) thrust = '224 kN';
@@ -49,7 +57,7 @@ class SpaceApiService {
       if (!height) height = '70.0 米';
       if (!thrust) thrust = '22,819 kN';
       if (!payloadLeo) payloadLeo = '63,800 kg';
-    } else if (name.includes('falcon 9') || name.includes('猎鹰九号')) {
+    } else if (name.includes('falcon 9') || name.includes('猎鹰九号') || name.includes('falcon')) {
       if (!height) height = '70.0 米';
       if (!thrust) thrust = '7,607 kN';
       if (!payloadLeo) payloadLeo = '22,800 kg';
@@ -65,6 +73,14 @@ class SpaceApiService {
       if (!height) height = '46.3 米';
       if (!thrust) thrust = '4,150 kN';
       if (!payloadLeo) payloadLeo = '8,200 kg';
+    } else if (name.includes('h3') || name.includes('h-3')) {
+      if (!height) height = '63.0 米';
+      if (!thrust) thrust = '5,760 kN';
+      if (!payloadLeo) payloadLeo = '4,000 kg';
+    } else if (name.includes('pslv')) {
+      if (!height) height = '44.0 米';
+      if (!thrust) thrust = '4,800 kN';
+      if (!payloadLeo) payloadLeo = '3,800 kg';
     } else {
       if (!height) height = '55.0 米';
       if (!thrust) thrust = '6,500 kN';
@@ -207,7 +223,7 @@ class SpaceApiService {
       const data = await res.json();
       return data.results.map((item) => {
         const { country, flag, company } = this.resolveCountryAndCompany(item);
-        const rocketName = item.rocket?.configuration?.name || 'Falcon 9 Block 5';
+        const rocketName = item.rocket?.configuration?.name || item.name || 'Falcon 9 Block 5';
         const specs = this.resolveRocketSpecs(rocketName, item.rocket?.configuration);
 
         return {
@@ -235,25 +251,29 @@ class SpaceApiService {
         const resSpacex = await fetch(this.spacexBase, { signal: AbortSignal.timeout(4000) });
         if (!resSpacex.ok) throw new Error(`SpaceX API Error ${resSpacex.status}`);
         const dataSpacex = await resSpacex.json();
-        return dataSpacex.slice(0, 5).map((item) => ({
-          name: item.name || 'SpaceX Starlink Launch',
-          windowStart: item.date_utc || new Date(Date.now() + 14 * 3600000).toISOString(),
-          status: 'Scheduled',
-          rocket: 'Falcon 9 Block 5',
-          pad: 'Cape Canaveral SLC-40',
-          padLocation: 'Florida, USA',
-          lsp: 'SpaceX',
-          country: '🇺🇸 美国',
-          flag: '🇺🇸',
-          company: 'SpaceX',
-          description: 'SpaceX 猎鹰九号运载火箭将部署 22 颗 Starlink V2 Mini 卫星入轨。',
-          missionType: '卫星通信 (Communications)',
-          orbit: '近地轨道 (LEO)',
-          rocketHeight: '70.0 米',
-          rocketThrust: '7,607 kN',
-          payloadLeo: '22,800 kg',
-          webcast: '📡 官方直播准备就绪'
-        }));
+        return dataSpacex.slice(0, 5).map((item) => {
+          const rocketName = 'Falcon 9 Block 5';
+          const specs = this.resolveRocketSpecs(rocketName, {});
+          return {
+            name: item.name || 'SpaceX Starlink Launch',
+            windowStart: item.date_utc || new Date(Date.now() + 14 * 3600000).toISOString(),
+            status: 'Scheduled',
+            rocket: rocketName,
+            pad: 'Cape Canaveral SLC-40',
+            padLocation: 'Florida, USA',
+            lsp: 'SpaceX',
+            country: '🇺🇸 美国',
+            flag: '🇺🇸',
+            company: 'SpaceX',
+            description: 'SpaceX 猎鹰九号运载火箭将部署 22 颗 Starlink V2 Mini 卫星入轨。',
+            missionType: '卫星通信 (Communications)',
+            orbit: '近地轨道 (LEO)',
+            rocketHeight: specs.height,
+            rocketThrust: specs.thrust,
+            payloadLeo: specs.payloadLeo,
+            webcast: '📡 官方直播准备就绪'
+          };
+        });
       } catch (err2) {
         return this.generateFallbackLaunches();
       }
@@ -262,6 +282,12 @@ class SpaceApiService {
 
   generateFallbackLaunches() {
     const now = Date.now();
+    
+    const f9Specs = this.resolveRocketSpecs('Falcon 9 Block 5', {});
+    const cz5bSpecs = this.resolveRocketSpecs('Long March 5B', {});
+    const arianeSpecs = this.resolveRocketSpecs('Ariane 62', {});
+    const electronSpecs = this.resolveRocketSpecs('Electron', {});
+
     return [
       {
         name: 'SpaceX Falcon 9 • Starlink Group 12-4',
@@ -277,9 +303,9 @@ class SpaceApiService {
         description: 'SpaceX 猎鹰九号运载火箭将部署 22 颗 Starlink V2 Mini 卫星入轨，提供全球宽带信号覆盖。',
         missionType: '卫星通信 (Communications)',
         orbit: '近地轨道 (LEO)',
-        rocketHeight: '70.0 米',
-        rocketThrust: '7,607 kN',
-        payloadLeo: '22,800 kg',
+        rocketHeight: f9Specs.height,
+        rocketThrust: f9Specs.thrust,
+        payloadLeo: f9Specs.payloadLeo,
         webcast: '📡 官方直播准备就绪'
       },
       {
@@ -296,9 +322,9 @@ class SpaceApiService {
         description: '长征五号乙重型运载火箭将发射中国天宫空间站巡天光学望远镜（CSST），进行大规模深空巡天观测。',
         missionType: '深空天文学 (Astrophysics)',
         orbit: '近地轨巡天轨道 (LEO Co-orbital)',
-        rocketHeight: '53.7 米',
-        rocketThrust: '10,562 kN',
-        payloadLeo: '25,000 kg',
+        rocketHeight: cz5bSpecs.height,
+        rocketThrust: cz5bSpecs.thrust,
+        payloadLeo: cz5bSpecs.payloadLeo,
         webcast: '📡 官方直播准备就绪'
       },
       {
@@ -315,9 +341,9 @@ class SpaceApiService {
         description: '欧洲阿利亚娜 62 型火箭将部署伽利略导航卫星，增强欧盟全球卫星定位服务。',
         missionType: '卫星导航 (Navigation)',
         orbit: '中地球轨道 (MEO)',
-        rocketHeight: '63.0 米',
-        rocketThrust: '8,000 kN',
-        payloadLeo: '10,350 kg',
+        rocketHeight: arianeSpecs.height,
+        rocketThrust: arianeSpecs.thrust,
+        payloadLeo: arianeSpecs.payloadLeo,
         webcast: '📡 官方直播准备就绪'
       },
       {
@@ -334,9 +360,9 @@ class SpaceApiService {
         description: 'Rocket Lab 电子号微型运载火箭将运载商业合成孔径雷达（SAR）卫星入轨。',
         missionType: '遥感观察 (Earth Observation)',
         orbit: '太阳同步轨道 (SSO)',
-        rocketHeight: '18.0 米',
-        rocketThrust: '224 kN',
-        payloadLeo: '300 kg',
+        rocketHeight: electronSpecs.height,
+        rocketThrust: electronSpecs.thrust,
+        payloadLeo: electronSpecs.payloadLeo,
         webcast: '📡 官方直播准备就绪'
       }
     ];
