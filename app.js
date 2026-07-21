@@ -307,8 +307,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // -------------------------------------------------------------
   // Space Weather Chart & NASA APOD
   // -------------------------------------------------------------
-  function loadSpaceWeatherChart() {
-    const weather = window.spaceApi.fetchSpaceWeather();
+  async function loadSpaceWeatherChart() {
+    const weather = await window.spaceApi.fetchSpaceWeather();
     document.getElementById('val-solar-flare').textContent = weather.solarFlare;
     document.getElementById('val-kp-index').textContent = weather.kpIndex;
 

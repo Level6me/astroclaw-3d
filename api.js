@@ -1,34 +1,52 @@
 /**
- * Space Data API Service
- * Integrates Celestrak, Launch Library 2, SpaceX, NASA, and Space Weather APIs
- * Includes complete offline fallback data generator.
+ * Real-time Space Data API Integration Engine
+ * Connects Celestrak, Launch Library 2, SpaceX, NASA APOD, and NOAA Space Weather APIs.
+ * Automatically handles CORS proxies and graceful offline fallbacks.
  */
 class SpaceApiService {
   constructor() {
     this.celestrakBase = 'https://celestrak.org/NORAD/elements/gp.php';
+    this.corsProxy = 'https://api.allorigins.win/raw?url=';
     this.launchLibBase = 'https://ll.thespacedevs.com/2.2.0/launch/upcoming/';
+    this.spacexBase = 'https://api.spacexdata.com/v4/launches/upcoming';
     this.nasaApodUrl = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY';
+    this.noaaKpUrl = 'https://services.swpc.noaa.gov/json/planetary_k_index_1m.json';
+    this.noaaXrayUrl = 'https://services.swpc.noaa.gov/json/goes/primary/xrays-1-day.json';
   }
 
-  // Fetch TLE satellite dataset by group
+  // 1. Celestrak Real Satellite TLE Data Fetcher
   async fetchSatellites(group = 'starlink') {
+    const rawUrl = `${this.celestrakBase}?GROUP=${group}&FORMAT=json`;
+    
+    // Try Direct Fetch
     try {
-      const url = `${this.celestrakBase}?GROUP=${group}&FORMAT=json`;
-      const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      const res = await fetch(rawUrl, { signal: AbortSignal.timeout(4000) });
       if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
       const data = await res.json();
+      console.log(`[Celestrak Direct] Successfully loaded ${data.length} real satellites for ${group}`);
       return this.parseCelestrakJson(data, group);
-    } catch (err) {
-      console.warn(`[Celestrak] Fetch failed for group ${group}, using fallback telemetry data:`, err.message);
-      return this.generateFallbackSatellites(group);
+    } catch (err1) {
+      console.warn(`[Celestrak Direct] Failed (${err1.message}), trying CORS proxy...`);
+      
+      // Try CORS Proxy
+      try {
+        const proxyUrl = `${this.corsProxy}${encodeURIComponent(rawUrl)}`;
+        const res2 = await fetch(proxyUrl, { signal: AbortSignal.timeout(5000) });
+        if (!res2.ok) throw new Error(`Proxy Error ${res2.status}`);
+        const data2 = await res2.json();
+        console.log(`[Celestrak Proxy] Successfully loaded ${data2.length} real satellites for ${group}`);
+        return this.parseCelestrakJson(data2, group);
+      } catch (err2) {
+        console.warn(`[Celestrak Proxy] Failed (${err2.message}), falling back to telemetry generator.`);
+        return this.generateFallbackSatellites(group);
+      }
     }
   }
 
-  // Parse JSON format from Celestrak
   parseCelestrakJson(data, group) {
-    if (!Array.isArray(data)) return this.generateFallbackSatellites(group);
-    return data.slice(0, 150).map((sat) => {
-      const meanMotion = sat.MEAN_MOTION || 15.0; // Revs per day
+    if (!Array.isArray(data) || data.length === 0) return this.generateFallbackSatellites(group);
+    return data.slice(0, 160).map((sat) => {
+      const meanMotion = sat.MEAN_MOTION || 15.0;
       const periodMins = 1440 / meanMotion;
       const inc = sat.INCLINATION || 53.0;
       const ecc = sat.ECCENTRICITY || 0.0001;
@@ -42,7 +60,7 @@ class SpaceApiService {
         inclination: inc,
         periodMinutes: periodMins.toFixed(1),
         altitudeKm: Math.round(altKm),
-        speedKms: (7.6 + (Math.random() * 0.2 - 0.1)).toFixed(2),
+        speedKms: (7.68 + (Math.random() * 0.2 - 0.1)).toFixed(2),
         eccentricity: ecc,
         raan: sat.RA_OF_ASC_NODE || Math.random() * 360,
         argPerigee: sat.ARG_OF_PERICENTER || Math.random() * 360,
@@ -53,7 +71,6 @@ class SpaceApiService {
     });
   }
 
-  // Generate rich realistic fallback satellites
   generateFallbackSatellites(group) {
     const count = group === 'starlink' ? 120 : group === 'stations' ? 6 : 40;
     const baseAlt = group === 'stations' ? 420 : group === 'beidou' ? 21500 : group === 'gps-ops' ? 20200 : 550;
@@ -85,12 +102,13 @@ class SpaceApiService {
     return list;
   }
 
-  // Fetch Upcoming Rocket Launches
+  // 2. Launch Library 2 + SpaceX API Live Launch Fetcher
   async fetchUpcomingLaunches() {
     try {
-      const res = await fetch(`${this.launchLibBase}?limit=5`, { signal: AbortSignal.timeout(5000) });
+      const res = await fetch(`${this.launchLibBase}?limit=6`, { signal: AbortSignal.timeout(4000) });
       if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
       const data = await res.json();
+      console.log(`[LaunchLib Direct] Loaded ${data.results.length} real launches.`);
       return data.results.map((item) => ({
         name: item.name || 'Falcon 9 - Starlink Launch',
         windowStart: item.window_start || new Date(Date.now() + 36000000).toISOString(),
@@ -100,8 +118,24 @@ class SpaceApiService {
         lsp: item.launch_service_provider?.name || 'SpaceX'
       }));
     } catch (err) {
-      console.warn('[LaunchLib] Fetch failed, using fallback launch data:', err.message);
-      return this.generateFallbackLaunches();
+      console.warn('[LaunchLib Direct] Failed, trying SpaceX API fallback:', err.message);
+      try {
+        const resSpacex = await fetch(this.spacexBase, { signal: AbortSignal.timeout(4000) });
+        if (!resSpacex.ok) throw new Error(`SpaceX API Error ${resSpacex.status}`);
+        const dataSpacex = await resSpacex.json();
+        console.log(`[SpaceX API Direct] Loaded ${dataSpacex.length} SpaceX upcoming launches.`);
+        return dataSpacex.slice(0, 5).map((item) => ({
+          name: item.name || 'SpaceX Starlink Launch',
+          windowStart: item.date_utc || new Date(Date.now() + 14 * 3600000).toISOString(),
+          status: 'Scheduled',
+          rocket: 'Falcon 9 Block 5',
+          pad: 'Cape Canaveral SLC-40',
+          lsp: 'SpaceX'
+        }));
+      } catch (err2) {
+        console.warn('[SpaceX API] Failed, using telemetry generator:', err2.message);
+        return this.generateFallbackLaunches();
+      }
     }
   }
 
@@ -143,30 +177,56 @@ class SpaceApiService {
     ];
   }
 
-  // Fetch NASA Astronomy Picture of the Day (APOD)
+  // 3. NASA APOD Live API Fetcher
   async fetchNasaApod() {
     try {
       const res = await fetch(this.nasaApodUrl, { signal: AbortSignal.timeout(4000) });
       if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
       const data = await res.json();
+      console.log(`[NASA APOD Live] Loaded picture of the day: ${data.title}`);
       return {
         title: data.title || 'The Cosmic Web & Deep Field',
-        date: data.date || '2026-07-20',
+        date: data.date || '2026-07-21',
         url: data.url || 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600',
         explanation: data.explanation || ''
       };
     } catch (err) {
+      console.warn('[NASA APOD] Failed, using JWST fallback picture:', err.message);
       return {
         title: 'JWST 银河系深空高分辨率星云星团视角',
-        date: '2026-07-20',
+        date: '2026-07-21',
         url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600',
         explanation: 'NASA 韦伯空间望远镜捕捉到的银河系深空星云特写。'
       };
     }
   }
 
-  // Fetch Simulated NOAA Space Weather
-  fetchSpaceWeather() {
+  // 4. NOAA Live Space Weather & Kp Index API Fetcher
+  async fetchSpaceWeather() {
+    try {
+      const res = await fetch(this.noaaKpUrl, { signal: AbortSignal.timeout(4000) });
+      if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        const recent = data.slice(-8);
+        const latestKp = recent[recent.length - 1].kp_index || 2.3;
+        const kpValues = recent.map(d => parseFloat(d.kp_index || 2.0));
+        
+        let kpStatus = 'Kp ' + latestKp.toFixed(1) + ' (平静)';
+        if (latestKp >= 5) kpStatus = 'Kp ' + latestKp.toFixed(1) + ' (地磁暴预警)';
+        else if (latestKp >= 4) kpStatus = 'Kp ' + latestKp.toFixed(1) + ' (活跃)';
+
+        console.log(`[NOAA Space Weather Live] Loaded real Kp index: ${latestKp}`);
+        return {
+          solarFlare: 'C1.4 (正常无异常)',
+          kpIndex: kpStatus,
+          kpValues: kpValues
+        };
+      }
+    } catch (err) {
+      console.warn('[NOAA Space Weather] Failed, using telemetry generator:', err.message);
+    }
+
     return {
       solarFlare: 'C1.4 (正常无异常)',
       kpIndex: 'Kp 2.3 (地磁平静)',
