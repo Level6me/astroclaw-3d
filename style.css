@@ -1,0 +1,258 @@
+/* Style design system for AstroClaw 3D Space Command Center */
+
+:root {
+  --bg-dark: #050811;
+  --bg-panel: rgba(10, 16, 30, 0.75);
+  --bg-card: rgba(15, 23, 42, 0.65);
+  --bg-dark-glass: rgba(5, 10, 20, 0.85);
+  
+  --border-glass: rgba(0, 243, 255, 0.18);
+  --border-cyan: rgba(0, 243, 255, 0.45);
+  --border-gold: rgba(255, 180, 0, 0.45);
+  
+  --color-cyan: #00f3ff;
+  --color-cyan-dark: rgba(0, 243, 255, 0.15);
+  --color-gold: #ffb400;
+  --color-red: #ff3366;
+  --color-green: #00ff88;
+  --color-purple: #ab47bc;
+  
+  --text-light: #f1f5f9;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Background HUD Grid Overlay */
+.hud-overlay-grid {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Color Utility Classes */
+.text-cyan { color: var(--color-cyan); }
+.text-gold { color: var(--color-gold); }
+.text-red { color: var(--color-red); }
+.text-green { color: var(--color-green); }
+.text-purple { color: var(--color-purple); }
+.text-dim { color: var(--text-dim); }
+.text-light { color: var(--text-light); }
+
+.bg-cyan-dark { background-color: var(--color-cyan-dark); }
+.bg-dark-glass { background-color: var(--bg-dark-glass); }
+
+.text-2xs { font-size: 0.6875rem; line-height: 0.95rem; }
+
+/* Glow Effects */
+.glow-cyan {
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.35);
+}
+
+/* Glassmorphism Containers */
+.bg-glass {
+  background: rgba(10, 16, 30, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.bg-glass-panel {
+  background: var(--bg-panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.bg-glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.border-glass {
+  border-color: var(--border-glass);
+}
+
+.border-cyan {
+  border-color: var(--border-cyan);
+}
+
+/* Header & HUD Navbar */
+.navbar-hud {
+  height: 60px;
+  background: rgba(5, 8, 17, 0.85);
+  backdrop-filter: blur(20px);
+}
+
+.brand-title {
+  font-family: var(--font-outfit);
+}
+
+.divider-v {
+  width: 1px;
+  height: 14px;
+  background-color: var(--border-glass);
+}
+
+.indicator-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.bg-green { background-color: var(--color-green); }
+
+/* HUD Buttons */
+.btn-hud {
+  background: rgba(0, 243, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  color: var(--text-light);
+  font-family: var(--font-mono);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-hud:hover {
+  background: rgba(0, 243, 255, 0.2);
+  border-color: var(--color-cyan);
+  color: var(--color-cyan);
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.25);
+}
+
+/* Main Layout Setup */
+.main-layout {
+  height: calc(100vh - 60px);
+}
+
+/* Sidebar Styling */
+.sidebar-left, .sidebar-right {
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Constellation Filter Buttons */
+.btn-filter {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--border-glass);
+  color: var(--text-dim);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  padding: 8px 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-filter:hover {
+  color: var(--text-light);
+  border-color: rgba(0, 243, 255, 0.35);
+  background: rgba(0, 243, 255, 0.08);
+}
+
+.btn-filter.active {
+  background: var(--color-cyan-dark);
+  border-color: var(--color-cyan);
+  color: var(--color-cyan);
+  font-weight: 600;
+  box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.2);
+}
+
+/* Search Input Box */
+.input-hud {
+  background: rgba(5, 10, 20, 0.8);
+  border: 1px solid var(--border-glass);
+  color: var(--text-light);
+  font-family: var(--font-mono);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input-hud:focus {
+  border-color: var(--color-cyan);
+  box-shadow: 0 0 12px rgba(0, 243, 255, 0.25);
+}
+
+/* Preset Viewport Buttons */
+.btn-preset {
+  background: rgba(10, 16, 30, 0.85);
+  border: 1px solid var(--border-glass);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.btn-preset:hover {
+  color: var(--color-cyan);
+  border-color: var(--color-cyan);
+  background: rgba(0, 243, 255, 0.15);
+}
+
+/* Custom Scrollbar for Panels */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(5, 10, 20, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 243, 255, 0.25);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-cyan);
+}
+
+/* Modal Overlay Animation */
+.modal-overlay {
+  transition: opacity 0.25s ease;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

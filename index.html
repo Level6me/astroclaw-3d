@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AstroClaw 3D — 全球航天与空间轨道三维指挥中心</title>
+  <meta name="description" content="实时三维卫星轨道追踪、全球火箭发射倒计时、空间天气监测与深空影像中心">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets & Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- External Libraries: Three.js, OrbitControls, FontAwesome Icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-dark text-light overflow-hidden antialiased">
+
+  <!-- HUD Overlay Grid background -->
+  <div class="hud-overlay-grid"></div>
+
+  <!-- Header Navigation Bar -->
+  <header class="navbar-hud flex justify-between items-center px-6 py-3 border-b border-glass z-50">
+    <div class="brand flex items-center space-x-3">
+      <div class="logo-icon glow-cyan">
+        <i class="fa-solid fa-satellite-dish text-cyan text-xl"></i>
+      </div>
+      <div>
+        <h1 class="brand-title text-xl font-bold tracking-wider font-outfit uppercase">
+          ASTRO<span class="text-cyan">CLAW</span> <span class="text-xs px-2 py-0.5 rounded bg-cyan-dark text-cyan border border-cyan font-mono">3D COMMAND</span>
+        </h1>
+        <p class="brand-subtitle text-xs text-dim">全球航天与空间轨道数字孪生指挥中心</p>
+      </div>
+    </div>
+
+    <!-- Live Telemetry Status Bar -->
+    <div class="status-pill flex items-center space-x-6 px-4 py-1.5 rounded-full bg-glass border border-glass text-xs font-mono">
+      <div class="flex items-center space-x-2">
+        <span class="indicator-dot bg-green animate-pulse"></span>
+        <span class="text-dim">网络状态:</span>
+        <span id="net-status-text" class="text-green font-semibold">ONLINE</span>
+      </div>
+      <div class="divider-v"></div>
+      <div class="flex items-center space-x-2">
+        <i class="fa-solid fa-microchip text-cyan"></i>
+        <span class="text-dim">在轨目标:</span>
+        <span id="satellite-count" class="text-cyan font-semibold">0</span>
+      </div>
+      <div class="divider-v"></div>
+      <div class="flex items-center space-x-2">
+        <i class="fa-solid fa-clock text-gold"></i>
+        <span id="utc-clock" class="text-gold font-mono">00:00:00 UTC</span>
+      </div>
+    </div>
+
+    <!-- Right Controls: Audio & Fullscreen -->
+    <div class="header-actions flex items-center space-x-3">
+      <!-- Audio Synth Control -->
+      <button id="btn-toggle-audio" class="btn-hud flex items-center space-x-2 px-3 py-1.5 rounded text-xs">
+        <i class="fa-solid fa-volume-high text-cyan"></i>
+        <span id="audio-status-label">音效: 开</span>
+      </button>
+
+      <!-- Ambient Drone Toggle -->
+      <button id="btn-toggle-ambient" class="btn-hud flex items-center space-x-2 px-3 py-1.5 rounded text-xs">
+        <i class="fa-solid fa-compact-disc text-purple"></i>
+        <span id="ambient-status-label">背景音: 关</span>
+      </button>
+
+      <!-- Fullscreen Toggle -->
+      <button id="btn-fullscreen" class="btn-hud px-3 py-1.5 rounded text-xs" title="全屏显示">
+        <i class="fa-solid fa-expand"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Workspace Layout -->
+  <div class="main-layout flex relative h-full">
+
+    <!-- Left Control & Navigation Sidebar -->
+    <aside class="sidebar-left w-80 p-4 border-r border-glass flex flex-col justify-between z-40 bg-glass-panel">
+      
+      <!-- Top Filters Section -->
+      <div class="space-y-5">
+        
+        <!-- Category Filter Pills -->
+        <div class="filter-group">
+          <h2 class="panel-label text-xs font-semibold text-dim uppercase tracking-wider mb-2">
+            <i class="fa-solid fa-layer-group mr-1.5 text-cyan"></i> 卫星星座筛选
+          </h2>
+          <div class="grid grid-cols-2 gap-2" id="constellation-selector">
+            <button class="btn-filter active" data-group="starlink">
+              <i class="fa-solid fa-wifi text-cyan"></i> Starlink (星链)
+            </button>
+            <button class="btn-filter" data-group="stations">
+              <i class="fa-solid fa-space-station-moon text-gold"></i> 空间站 (ISS)
+            </button>
+            <button class="btn-filter" data-group="beidou">
+              <i class="fa-solid fa-compass text-red"></i> 北斗 (Beidou)
+            </button>
+            <button class="btn-filter" data-group="gps-ops">
+              <i class="fa-solid fa-location-crosshairs text-blue"></i> GPS 导航
+            </button>
+            <button class="btn-filter" data-group="oneweb">
+              <i class="fa-solid fa-globe text-purple"></i> OneWeb
+            </button>
+            <button class="btn-filter" data-group="last-30-days">
+              <i class="fa-solid fa-rocket text-green"></i> 近30天新卫星
+            </button>
+            <button class="btn-filter" data-group="galileo">
+              <i class="fa-solid fa-satellite text-cyan font-bold"></i> 伽利略 (EU)
+            </button>
+            <button class="btn-filter" data-group="amateur">
+              <i class="fa-solid fa-radio text-yellow"></i> 业余无线电
+            </button>
+          </div>
+        </div>
+
+        <!-- Search Input -->
+        <div class="search-box relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-dim text-xs"></i>
+          <input type="text" id="search-input" placeholder="搜索卫星名称或 NORAD ID..." class="input-hud w-full pl-9 pr-3 py-2 text-xs rounded">
+        </div>
+
+        <!-- 3D Render Display Controls -->
+        <div class="render-controls border-t border-glass pt-3">
+          <h2 class="panel-label text-xs font-semibold text-dim uppercase tracking-wider mb-2">
+            <i class="fa-solid fa-eye mr-1.5 text-cyan"></i> 视角与渲染选项
+          </h2>
+          <div class="space-y-2 text-xs">
+            <label class="flex items-center justify-between cursor-pointer">
+              <span><i class="fa-solid fa-route text-cyan mr-1.5"></i> 显示卫星轨道线</span>
+              <input type="checkbox" id="chk-show-orbits" checked class="toggle-checkbox">
+            </label>
+            <label class="flex items-center justify-between cursor-pointer">
+              <span><i class="fa-solid fa-circle-dot text-gold mr-1.5"></i> 大气光晕与灯光</span>
+              <input type="checkbox" id="chk-show-atmosphere" checked class="toggle-checkbox">
+            </label>
+            <label class="flex items-center justify-between cursor-pointer">
+              <span><i class="fa-solid fa-rotate text-green mr-1.5"></i> 地球自转模拟</span>
+              <input type="checkbox" id="chk-auto-rotate" checked class="toggle-checkbox">
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Panel: Quick Stats -->
+      <div class="stats-panel bg-glass-card p-3 rounded border border-glass space-y-2">
+        <h3 class="text-xs font-semibold text-cyan flex justify-between items-center">
+          <span><i class="fa-solid fa-chart-line mr-1"></i> 实时轨道演算数据</span>
+          <span class="text-dim text-2xs font-mono">60 FPS</span>
+        </h3>
+        <div class="text-xs space-y-1 font-mono text-dim">
+          <div class="flex justify-between">
+            <span>平均轨道高度:</span>
+            <span id="stat-avg-altitude" class="text-light">550 km</span>
+          </div>
+          <div class="flex justify-between">
+            <span>平均飞行速度:</span>
+            <span id="stat-avg-speed" class="text-light">7.68 km/s</span>
+          </div>
+          <div class="flex justify-between">
+            <span>数据更新周期:</span>
+            <span class="text-green">实时更新 (TLE)</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Center 3D WebGL Canvas Viewport -->
+    <main class="viewport-3d flex-1 relative">
+      <div id="globe-container" class="w-full h-full"></div>
+
+      <!-- Floating Tooltip for Selected Satellite -->
+      <div id="sat-hover-tooltip" class="hover-tooltip hidden absolute z-30 pointer-events-none p-2.5 rounded bg-glass border border-cyan text-xs font-mono">
+        <div class="font-bold text-cyan flex items-center space-x-1.5">
+          <i class="fa-solid fa-satellite"></i>
+          <span id="tooltip-name">STARLINK-3012</span>
+        </div>
+        <div class="text-dim text-2xs mt-1">NORAD ID: <span id="tooltip-norad" class="text-light">52001</span></div>
+        <div class="text-dim text-2xs">高度: <span id="tooltip-alt" class="text-gold">550.2 km</span></div>
+      </div>
+
+      <!-- Quick 3D View Reset Buttons -->
+      <div class="view-preset-toolbar absolute bottom-6 left-6 z-30 flex space-x-2">
+        <button class="btn-preset" data-preset="reset"><i class="fa-solid fa-globe"></i> 全景视图</button>
+        <button class="btn-preset" data-preset="iss"><i class="fa-solid fa-space-station-moon text-gold"></i> 聚焦 ISS</button>
+        <button class="btn-preset" data-preset="china"><i class="fa-solid fa-flag text-red"></i> 聚焦中国</button>
+        <button class="btn-preset" data-preset="northpole"><i class="fa-solid fa-compass"></i> 北极俯瞰</button>
+      </div>
+
+      <!-- 3D Scene Controls Hints -->
+      <div class="scene-hint absolute bottom-6 right-6 z-30 text-2xs text-dim font-mono bg-glass px-3 py-1.5 rounded border border-glass">
+        <i class="fa-solid fa-computer-mouse mr-1"></i> 左键拖拽旋转 | 滚轮缩放 | 右键平移 | 点击卫星查看详情
+      </div>
+    </main>
+
+    <!-- Right Information Sidebar Panels -->
+    <aside class="sidebar-right w-96 p-4 border-l border-glass flex flex-col space-y-4 z-40 bg-glass-panel overflow-y-auto">
+      
+      <!-- Panel 1: Rocket Launch Command Center -->
+      <section class="panel-card bg-glass-card p-3.5 rounded border border-glass">
+        <div class="panel-header flex justify-between items-center mb-3">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-gold flex items-center">
+            <i class="fa-solid fa-rocket mr-2 animate-bounce"></i> 火箭发射全球指挥中心
+          </h2>
+          <span class="badge-live text-2xs bg-red text-white px-2 py-0.5 rounded font-mono font-bold animate-pulse">LIVE</span>
+        </div>
+
+        <!-- Next Launch Countdown Container -->
+        <div class="next-launch-box bg-dark-glass p-3 rounded border border-gold-dim text-center mb-3">
+          <div class="text-2xs text-dim uppercase tracking-widest font-mono">下一场发射任务倒计时</div>
+          <div id="launch-title" class="text-sm font-bold text-light truncate my-1">SpaceX Starlink Group 12-4</div>
+          <div id="launch-countdown" class="text-2xl font-extrabold font-mono text-gold tracking-wider my-1">
+            00d 00h 00m 00s
+          </div>
+          <div class="flex justify-between text-2xs text-dim font-mono mt-1 pt-1 border-t border-glass">
+            <span><i class="fa-solid fa-location-dot mr-1"></i><span id="launch-pad">KSC LC-39A, Florida</span></span>
+            <span><i class="fa-solid fa-shuttle-space mr-1"></i><span id="launch-rocket">Falcon 9 Block 5</span></span>
+          </div>
+        </div>
+
+        <!-- Upcoming Launch List -->
+        <div class="space-y-2">
+          <h3 class="text-2xs font-semibold text-dim uppercase tracking-wider">接下来的发射计划 (Launch Library 2)</h3>
+          <div id="upcoming-launch-list" class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+            <div class="text-xs text-dim text-center py-4"><i class="fa-solid fa-spinner animate-spin"></i> 加载发射预告数据中...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 2: Space Weather & Solar Storm Monitor -->
+      <section class="panel-card bg-glass-card p-3.5 rounded border border-glass">
+        <div class="panel-header flex justify-between items-center mb-2">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-cyan flex items-center">
+            <i class="fa-solid fa-sun mr-2 text-yellow-400"></i> 空间天气与太阳风暴监控
+          </h2>
+          <span class="text-2xs text-dim font-mono">NOAA Data</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <div class="metric-card bg-dark-glass p-2 rounded border border-glass text-center">
+            <div class="text-2xs text-dim font-mono">太阳耀斑级别 (Solar Flare)</div>
+            <div id="val-solar-flare" class="text-base font-bold text-green font-mono mt-0.5">C1.2 (正常)</div>
+          </div>
+          <div class="metric-card bg-dark-glass p-2 rounded border border-glass text-center">
+            <div class="text-2xs text-dim font-mono">地磁指数 (Kp Index)</div>
+            <div id="val-kp-index" class="text-base font-bold text-cyan font-mono mt-0.5">Kp 2 (平静)</div>
+          </div>
+        </div>
+
+        <div class="chart-container relative h-28">
+          <canvas id="space-weather-chart"></canvas>
+        </div>
+      </section>
+
+      <!-- Panel 3: Deep Space & NASA Gallery -->
+      <section class="panel-card bg-glass-card p-3.5 rounded border border-glass">
+        <div class="panel-header flex justify-between items-center mb-2">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-purple flex items-center">
+            <i class="fa-solid fa-camera-retro mr-2"></i> NASA 深空每日天文影像 (APOD)
+          </h2>
+        </div>
+
+        <div id="nasa-apod-card" class="apod-preview relative rounded overflow-hidden border border-glass group cursor-pointer">
+          <img id="apod-img" src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600" alt="NASA APOD" class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-dark via-transparent to-transparent flex flex-col justify-end p-2.5">
+            <div id="apod-title" class="text-xs font-bold text-light truncate">The Milky Way Over Astronomical Observatory</div>
+            <div id="apod-date" class="text-2xs text-cyan font-mono">2026-07-20</div>
+          </div>
+        </div>
+      </section>
+
+    </aside>
+
+  </div>
+
+  <!-- Modal: Detailed Satellite Information Card -->
+  <div id="modal-sat-detail" class="modal-overlay hidden fixed inset-0 z-50 flex items-center justify-center bg-black-75 backdrop-blur-sm p-4">
+    <div class="modal-content w-full max-w-lg bg-glass-panel border border-cyan rounded-lg p-6 shadow-2xl space-y-4 relative animate-fade-in">
+      
+      <!-- Close Button -->
+      <button id="btn-close-modal" class="absolute top-4 right-4 text-dim hover:text-cyan text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Header -->
+      <div class="flex items-center space-x-3">
+        <div class="p-3 bg-cyan-dark rounded border border-cyan">
+          <i class="fa-solid fa-satellite text-cyan text-2xl"></i>
+        </div>
+        <div>
+          <h3 id="modal-sat-name" class="text-lg font-bold text-light font-outfit uppercase">STARLINK-3012</h3>
+          <p class="text-xs text-dim font-mono">NORAD ID: <span id="modal-sat-norad" class="text-cyan">52001</span> | 国际标识符: <span id="modal-sat-intl" class="text-light">2022-045A</span></p>
+        </div>
+      </div>
+
+      <!-- Main Parameters Grid -->
+      <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+        <div class="bg-dark-glass p-2.5 rounded border border-glass">
+          <span class="text-dim">轨道开普勒高度:</span>
+          <div id="modal-sat-alt" class="text-sm font-bold text-gold mt-0.5">550.2 km</div>
+        </div>
+        <div class="bg-dark-glass p-2.5 rounded border border-glass">
+          <span class="text-dim">运行速度:</span>
+          <div id="modal-sat-speed" class="text-sm font-bold text-green mt-0.5">7.68 km/s</div>
+        </div>
+        <div class="bg-dark-glass p-2.5 rounded border border-glass">
+          <span class="text-dim">轨道倾角 (Inclination):</span>
+          <div id="modal-sat-inc" class="text-sm font-bold text-cyan mt-0.5">53.22°</div>
+        </div>
+        <div class="bg-dark-glass p-2.5 rounded border border-glass">
+          <span class="text-dim">运行周期 (Period):</span>
+          <div id="modal-sat-period" class="text-sm font-bold text-purple mt-0.5">95.4 分钟</div>
+        </div>
+      </div>
+
+      <!-- TLE Raw Code Block -->
+      <div>
+        <div class="text-xs font-semibold text-dim uppercase tracking-wider mb-1">两行轨道根数 (TLE Data)</div>
+        <pre id="modal-sat-tle" class="p-3 bg-black rounded border border-glass text-2xs font-mono text-green overflow-x-auto">
+1 25544U 98067A   26201.55421157  .00016717  00000-0  30123-3 0  9993
+2 25544  51.6416 290.4182 0005423  88.3145 271.8541 15.49814725578119
+        </pre>
+      </div>
+
+      <!-- Action Button -->
+      <div class="flex justify-end space-x-3 pt-2">
+        <button id="btn-focus-sat" class="btn-hud bg-cyan-dark text-cyan border-cyan px-4 py-2 text-xs rounded font-bold">
+          <i class="fa-solid fa-crosshairs mr-1"></i> 镜头聚焦跟随该卫星
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="audio.js"></script>
+  <script src="api.js"></script>
+  <script src="globe.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
