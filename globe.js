@@ -312,7 +312,7 @@ class Globe3DEngine {
     }
     this.satMeshList = [];
 
-    const satGeo = new THREE.SphereGeometry(0.18, 12, 12); // Slightly larger touch area
+    const satGeo = new THREE.SphereGeometry(0.09, 10, 10); // Micro sharp satellite points
 
     satList.forEach((sat, index) => {
       const altScale = 8 + (sat.altitudeKm / 1000) * 1.2;
@@ -389,9 +389,9 @@ class Globe3DEngine {
       return intersectsList[0].object;
     }
 
-    // Proximity search if exact ray hits nothing (Generous 1.6-unit hit radius)
+    // Precise proximity search if exact ray hits nothing (0.35-unit precise hit radius)
     let closestMesh = null;
-    let minDistance = 1.6;
+    let minDistance = 0.35;
 
     const ray = this.raycaster.ray;
     this.satMeshList.forEach(mesh => {
