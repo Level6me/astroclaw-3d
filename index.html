@@ -67,6 +67,17 @@
 
     <!-- Right Controls: Mobile Right Drawer Toggle & Audio -->
     <div class="header-actions flex items-center space-x-2">
+      <!-- Desktop Sidebar Toggle Buttons -->
+      <button id="btn-toggle-left-pc" class="hidden lg:flex btn-hud px-2.5 py-1.5 rounded text-2xs md:text-xs items-center space-x-1 text-cyan" title="显示/隐藏左侧控制面板">
+        <i class="fa-solid fa-sliders text-cyan"></i>
+        <span>左侧面板</span>
+      </button>
+
+      <button id="btn-toggle-right-pc" class="hidden lg:flex btn-hud px-2.5 py-1.5 rounded text-2xs md:text-xs items-center space-x-1 text-gold" title="显示/隐藏右侧指挥中心">
+        <i class="fa-solid fa-rocket text-gold"></i>
+        <span>右侧面板</span>
+      </button>
+
       <!-- Audio Synth Control -->
       <button id="btn-toggle-audio" class="btn-hud flex items-center space-x-1.5 px-2.5 py-1.5 rounded text-2xs md:text-xs">
         <i class="fa-solid fa-volume-high text-cyan"></i>
@@ -90,8 +101,13 @@
   <div class="main-layout flex relative h-full">
 
     <!-- Left Control & Navigation Sidebar (Responsive Drawer) -->
-    <aside id="sidebar-left" class="sidebar-left sidebar-drawer-left w-80 p-4 border-r border-glass flex flex-col justify-between z-40 bg-glass-panel">
+    <aside id="sidebar-left" class="sidebar-left sidebar-drawer-left w-80 p-4 border-r border-glass flex flex-col justify-between z-40 bg-glass-panel relative">
       
+      <!-- Desktop PC Edge Collapse Button -->
+      <button id="btn-collapse-left" class="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 z-50 btn-hud w-7 h-7 rounded-full items-center justify-center text-xs shadow-lg text-cyan bg-dark-glass border border-cyan/40 hover:scale-110 transition-transform" title="收起左侧面板">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+
       <!-- Mobile Close Button -->
       <div class="lg:hidden flex justify-between items-center pb-2 mb-2 border-b border-glass">
         <span class="text-xs font-bold text-cyan font-outfit uppercase"><i class="fa-solid fa-layer-group mr-1.5"></i> 卫星筛选与控制</span>
@@ -213,10 +229,26 @@
       <div class="scene-hint hidden md:block absolute bottom-6 right-6 z-30 text-2xs text-dim font-mono bg-glass px-3 py-1.5 rounded border border-glass">
         <i class="fa-solid fa-computer-mouse mr-1"></i> 单指拖拽旋转 | 双指捏合缩放 | 点击卫星查看详情
       </div>
+
+      <!-- PC Desktop Collapsed Floating Edge Expand Buttons -->
+      <button id="btn-expand-left" class="hidden z-30 fixed left-0 top-1/2 -translate-y-1/2 btn-hud px-2.5 py-3 rounded-r-xl text-xs text-cyan bg-glass-panel border-r border-y border-cyan/40 shadow-2xl items-center space-x-1.5 hover:scale-105 transition-all" title="展开左侧控制面板">
+        <i class="fa-solid fa-angles-right text-cyan animate-pulse"></i>
+        <span class="font-bold text-2xs">卫星控制</span>
+      </button>
+
+      <button id="btn-expand-right" class="hidden z-30 fixed right-0 top-1/2 -translate-y-1/2 btn-hud px-2.5 py-3 rounded-l-xl text-xs text-gold bg-glass-panel border-l border-y border-gold/40 shadow-2xl items-center space-x-1.5 hover:scale-105 transition-all" title="展开发射与天气面板">
+        <span class="font-bold text-2xs">发射指挥</span>
+        <i class="fa-solid fa-angles-left text-gold animate-pulse"></i>
+      </button>
     </main>
 
     <!-- Right Information Sidebar Panels (Responsive Drawer) -->
-    <aside id="sidebar-right" class="sidebar-right sidebar-drawer-right w-96 p-4 border-l border-glass flex flex-col space-y-4 z-40 bg-glass-panel overflow-y-auto">
+    <aside id="sidebar-right" class="sidebar-right sidebar-drawer-right w-96 p-4 border-l border-glass flex flex-col space-y-4 z-40 bg-glass-panel overflow-y-auto relative">
+      
+      <!-- Desktop PC Edge Collapse Button -->
+      <button id="btn-collapse-right" class="hidden lg:flex absolute -left-3.5 top-1/2 -translate-y-1/2 z-50 btn-hud w-7 h-7 rounded-full items-center justify-center text-xs shadow-lg text-gold bg-dark-glass border border-gold/40 hover:scale-110 transition-transform" title="收起右侧面板">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
       
       <!-- Mobile Close Button -->
       <div class="lg:hidden flex justify-between items-center pb-2 mb-1 border-b border-glass">
@@ -474,9 +506,9 @@
   </div>
 
   <!-- Scripts -->
-  <script src="audio.js?v=1.1.8"></script>
-  <script src="api.js?v=1.1.8"></script>
-  <script src="globe.js?v=1.1.8"></script>
-  <script src="app.js?v=1.1.8"></script>
+  <script src="audio.js?v=1.1.9"></script>
+  <script src="api.js?v=1.1.9"></script>
+  <script src="globe.js?v=1.1.9"></script>
+  <script src="app.js?v=1.1.9"></script>
 </body>
 </html>

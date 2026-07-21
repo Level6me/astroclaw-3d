@@ -130,3 +130,13 @@ I0721 20:23:26.785876 1200290 http_helpers.go:228] URL: https://daily-cloudcode-
 I0721 20:23:27.684075 1200290 browser.go:269] token refreshed, new expiry=2026-07-21 21:23:26.683981139 +0800 CST m=+3637.718928715
 I0721 20:23:30.571386 1200290 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xa09f749bf7e81715 ResponseID: wGRfaouqL5PXz7IP1fLBoAw
 I0721 20:23:33.842516 1200290 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xd9713df2cae48dbd ResponseID: xGRfapy_Fbfoz7IPqf-CqA0
+I0721 20:23:41.516350 1200290 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x27b4ad92c48415fa ResponseID: y2RfatfaIKuHz7IP5qy5yQQ
+I0721 20:23:48.325355 1200290 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x456de6d4f9f3efc7 ResponseID: 0mRfaqDLLryGz7IPlamkiQ8
+I0721 20:24:02.582387 1200290 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x94e0b2351fe27608 ResponseID: 4WRfauSjBLLBz7IP4ryQiAQ
+I0721 20:24:06.836614 1200290 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xc9ff897be03508bd ResponseID: 5GRfaoT_Kfutz7IP8Pr0sQU
+I0721 20:24:08.407361 1200290 manager.go:682] CLI store manager shutting down
+I0721 20:24:08.408534 1200290 conversation_manager.go:540] Stopping conversation stream
+I0721 20:24:08.408773 1200290 server.go:966] Stream goroutine exited for f81ffb5c-0700-467d-8e90-5d6ca2f6d649, sending completion signal
+I0721 20:24:08.408852 1200290 conversation_manager.go:661] Stream completed for f81ffb5c-0700-467d-8e90-5d6ca2f6d649, clearing ResponsePending
+I0721 20:24:08.409927 1200290 server.go:2454] Language server shutting down
+I0721 20:24:08.410006 1200290 server.go:2459] Waiting for migrations to complete to prevent partial migration state...

@@ -530,4 +530,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
   }
 
+  // -------------------------------------------------------------
+  // PC Desktop Sidebar Collapsing & Fullscreen 3D Logic
+  // -------------------------------------------------------------
+  const sidebarLeft = document.getElementById('sidebar-left');
+  const sidebarRight = document.getElementById('sidebar-right');
+  const btnToggleLeftPc = document.getElementById('btn-toggle-left-pc');
+  const btnToggleRightPc = document.getElementById('btn-toggle-right-pc');
+  const btnCollapseLeft = document.getElementById('btn-collapse-left');
+  const btnCollapseRight = document.getElementById('btn-collapse-right');
+  const btnExpandLeft = document.getElementById('btn-expand-left');
+  const btnExpandRight = document.getElementById('btn-expand-right');
+
+  function toggleLeftPc(forceState) {
+    if (window.spaceAudio) window.spaceAudio.playClick();
+    const isCollapsed = forceState !== undefined ? forceState : !sidebarLeft.classList.contains('pc-collapsed');
+    sidebarLeft.classList.toggle('pc-collapsed', isCollapsed);
+    if (btnExpandLeft) btnExpandLeft.classList.toggle('hidden', !isCollapsed);
+    if (globe && globe.onWindowResize) setTimeout(() => globe.onWindowResize(), 360);
+  }
+
+  function toggleRightPc(forceState) {
+    if (window.spaceAudio) window.spaceAudio.playClick();
+    const isCollapsed = forceState !== undefined ? forceState : !sidebarRight.classList.contains('pc-collapsed');
+    sidebarRight.classList.toggle('pc-collapsed', isCollapsed);
+    if (btnExpandRight) btnExpandRight.classList.toggle('hidden', !isCollapsed);
+    if (globe && globe.onWindowResize) setTimeout(() => globe.onWindowResize(), 360);
+  }
+
+  if (btnToggleLeftPc) btnToggleLeftPc.addEventListener('click', () => toggleLeftPc());
+  if (btnToggleRightPc) btnToggleRightPc.addEventListener('click', () => toggleRightPc());
+  if (btnCollapseLeft) btnCollapseLeft.addEventListener('click', () => toggleLeftPc(true));
+  if (btnCollapseRight) btnCollapseRight.addEventListener('click', () => toggleRightPc(true));
+  if (btnExpandLeft) btnExpandLeft.addEventListener('click', () => toggleLeftPc(false));
+  if (btnExpandRight) btnExpandRight.addEventListener('click', () => toggleRightPc(false));
+
 });

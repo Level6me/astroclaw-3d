@@ -299,3 +299,29 @@ body {
     max-height: 85vh;
   }
 }
+
+/* ------------------------------------------------------------- */
+/* PC Desktop Collapsible Sidebars */
+/* ------------------------------------------------------------- */
+@media (min-width: 1024px) {
+  .sidebar-left {
+    position: relative;
+    transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+  }
+  .sidebar-right {
+    position: relative;
+    transition: margin-right 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+  }
+
+  .sidebar-left.pc-collapsed {
+    margin-left: -20rem; /* w-80 width */
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .sidebar-right.pc-collapsed {
+    margin-right: -24rem; /* w-96 width */
+    opacity: 0;
+    pointer-events: none;
+  }
+}
