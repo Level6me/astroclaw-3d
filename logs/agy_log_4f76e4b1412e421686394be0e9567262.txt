@@ -124,3 +124,13 @@ I0721 20:42:31.870595 1207961 http_helpers.go:228] URL: https://daily-cloudcode-
 I0721 20:42:35.644265 1207961 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xeba6fc9a807ae920 ResponseID: OWlfao2TNM2Gz7IP7Lfa0A4
 I0721 20:42:39.428795 1207961 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x6a91d1b6a009b0bb ResponseID: PWlfavyiG77Sz7IP2rHtyQU
 I0721 20:42:42.998235 1207961 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x2c13f42cad41629c ResponseID: QWlfavSQEvGHz7IPnZPF2A4
+I0721 20:42:49.762263 1207961 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x2aecc537221e97a8 ResponseID: R2lfasyxM6iHz7IPzMCaqAs
+I0721 20:42:55.638070 1207961 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x20cbb93012d9599a ResponseID: TWlfau_kI4SBz7IPicibyQg
+I0721 20:43:09.508045 1207961 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xa251b667d8ae1984 ResponseID: W2lfauuRHN-tz7IP1LChoAw
+I0721 20:43:13.024911 1207961 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xdd78f380af35066a ResponseID: X2lfapLdFr7Sz7IP2rHtyQU
+I0721 20:43:14.614588 1207961 manager.go:682] CLI store manager shutting down
+I0721 20:43:14.619060 1207961 conversation_manager.go:540] Stopping conversation stream
+I0721 20:43:14.621034 1207961 server.go:2454] Language server shutting down
+I0721 20:43:14.621137 1207961 server.go:2459] Waiting for migrations to complete to prevent partial migration state...
+I0721 20:43:14.621321 1207961 server.go:966] Stream goroutine exited for f81ffb5c-0700-467d-8e90-5d6ca2f6d649, sending completion signal
+I0721 20:43:14.621394 1207961 conversation_manager.go:661] Stream completed for f81ffb5c-0700-467d-8e90-5d6ca2f6d649, clearing ResponsePending

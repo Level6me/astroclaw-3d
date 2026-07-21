@@ -541,17 +541,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const sidebarRight = document.getElementById('sidebar-right');
   const btnToggleLeftPc = document.getElementById('btn-toggle-left-pc');
   const btnToggleRightPc = document.getElementById('btn-toggle-right-pc');
-  const btnCollapseLeft = document.getElementById('btn-collapse-left');
-  const btnCollapseRight = document.getElementById('btn-collapse-right');
-  const btnExpandLeft = document.getElementById('btn-expand-left');
-  const btnExpandRight = document.getElementById('btn-expand-right');
+  const btnHandleLeftPc = document.getElementById('btn-handle-left-pc');
+  const btnHandleRightPc = document.getElementById('btn-handle-right-pc');
+  const iconHandleLeft = document.getElementById('icon-handle-left');
+  const iconHandleRight = document.getElementById('icon-handle-right');
 
   function toggleLeftPc(forceState) {
     if (window.spaceAudio) window.spaceAudio.playClick();
     const isCollapsed = forceState !== undefined ? forceState : !sidebarLeft.classList.contains('pc-collapsed');
     sidebarLeft.classList.toggle('pc-collapsed', isCollapsed);
-    if (btnExpandLeft) {
-      btnExpandLeft.style.display = isCollapsed ? 'flex' : 'none';
+    if (btnHandleLeftPc) btnHandleLeftPc.classList.toggle('collapsed', isCollapsed);
+    if (iconHandleLeft) {
+      iconHandleLeft.className = isCollapsed ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-left';
     }
     if (globe && globe.onWindowResize) setTimeout(() => globe.onWindowResize(), 360);
   }
@@ -560,17 +561,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.spaceAudio) window.spaceAudio.playClick();
     const isCollapsed = forceState !== undefined ? forceState : !sidebarRight.classList.contains('pc-collapsed');
     sidebarRight.classList.toggle('pc-collapsed', isCollapsed);
-    if (btnExpandRight) {
-      btnExpandRight.style.display = isCollapsed ? 'flex' : 'none';
+    if (btnHandleRightPc) btnHandleRightPc.classList.toggle('collapsed', isCollapsed);
+    if (iconHandleRight) {
+      iconHandleRight.className = isCollapsed ? 'fa-solid fa-chevron-left' : 'fa-solid fa-chevron-right';
     }
     if (globe && globe.onWindowResize) setTimeout(() => globe.onWindowResize(), 360);
   }
 
   if (btnToggleLeftPc) btnToggleLeftPc.addEventListener('click', () => toggleLeftPc());
   if (btnToggleRightPc) btnToggleRightPc.addEventListener('click', () => toggleRightPc());
-  if (btnCollapseLeft) btnCollapseLeft.addEventListener('click', () => toggleLeftPc(true));
-  if (btnCollapseRight) btnCollapseRight.addEventListener('click', () => toggleRightPc(true));
-  if (btnExpandLeft) btnExpandLeft.addEventListener('click', () => toggleLeftPc(false));
-  if (btnExpandRight) btnExpandRight.addEventListener('click', () => toggleRightPc(false));
+  if (btnHandleLeftPc) btnHandleLeftPc.addEventListener('click', () => toggleLeftPc());
+  if (btnHandleRightPc) btnHandleRightPc.addEventListener('click', () => toggleRightPc());
 
 });

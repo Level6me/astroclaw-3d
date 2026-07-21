@@ -330,4 +330,31 @@ body {
     pointer-events: none;
     overflow: hidden;
   }
+
+  /* Unified Edge Handle Buttons (100% Pixel-Perfect Horizontal Line Alignment) */
+  .pc-toggle-handle-left {
+    position: fixed;
+    top: calc(50% + 28px);
+    left: 20rem;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .pc-toggle-handle-left.collapsed {
+    left: 1.25rem;
+  }
+
+  .pc-toggle-handle-right {
+    position: fixed;
+    top: calc(50% + 28px);
+    right: 24rem;
+    transform: translate(50%, -50%);
+    z-index: 50;
+    transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .pc-toggle-handle-right.collapsed {
+    right: 1.25rem;
+  }
 }

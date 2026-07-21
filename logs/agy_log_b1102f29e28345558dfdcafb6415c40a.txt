@@ -1,0 +1,120 @@
+I0721 20:46:44.772728 1209706 resolver.go:85] Model ID Gemini 3.5 Flash (Medium) not in local config, defaulting to CCPA
+I0721 20:46:44.772946 1209706 resolver.go:111] Model resolved via default
+I0721 20:46:44.773188 1209706 server.go:1371] Starting language server process with pid 1209706
+I0721 20:46:44.774196 1209706 server.go:1421] Language server version: 1.1.5
+I0721 20:46:44.774238 1209706 server.go:523] Language server will attempt to listen on host localhost
+I0721 20:46:44.775381 1209706 server.go:538] Language server listening on random port at 44973 for HTTPS (gRPC)
+I0721 20:46:44.775704 1209706 server.go:546] Language server listening on random port at 43377 for HTTP
+E0721 20:46:45.679197 1209706 log.go:398] Failed to poll ListExperiments: error getting token source: You are not logged into Antigravity.
+W0721 20:46:45.683164 1209706 log_context.go:117] Cache(loadCodeAssistResponse): Singleflight refresh failed: error getting token source: You are not logged into Antigravity.
+E0721 20:46:45.683396 1209706 log.go:398] error getting token source: You are not logged into Antigravity.
+W0721 20:46:45.684970 1209706 log_context.go:117] Cache(availableModels): Singleflight refresh failed: failed to get load code assist response: error getting token source: You are not logged into Antigravity.
+E0721 20:46:45.685168 1209706 log.go:398] failed to get load code assist response: error getting token source: You are not logged into Antigravity.
+W0721 20:46:45.688356 1209706 launchmanager.go:69] Entering local chrome mode! This is WRONG unless you are running tests or in eval mode on Linux.
+E0721 20:46:45.691370 1209706 log.go:398] Failed to poll FetchAvailableModels: failed to get load code assist response: error getting token source: You are not logged into Antigravity.
+I0721 20:46:45.692841 1209706 manager.go:98] Creating trajectory store manager with proto store and SQLite store
+I0721 20:46:45.703040 1209706 manager.go:76] Migration [MIGRATION_ID_SIDECAR_USER_CONFIG_BYPASS] is disabled, skipping entirely
+I0721 20:46:45.703189 1209706 manager.go:79] Migration [MIGRATION_ID_SANITY_CHECK_PROJECT_URIS] is enabled
+I0721 20:46:45.703264 1209706 manager.go:88] Migration [MIGRATION_ID_SANITY_CHECK_PROJECT_URIS] already has status MIGRATION_STATUS_COMPLETED, skipping
+I0721 20:46:45.741985 1209706 server.go:2573] Auth succeeded, refreshing features and managers
+E0721 20:46:45.742356 1209706 log.go:398] Failed to poll ListExperiments: error getting token source: You are not logged into Antigravity.
+W0721 20:46:45.743791 1209706 log_context.go:117] Cache(loadCodeAssistResponse): Singleflight refresh failed: error getting token source: You are not logged into Antigravity.
+E0721 20:46:45.743973 1209706 log.go:398] error getting token source: You are not logged into Antigravity.
+W0721 20:46:45.745473 1209706 log_context.go:117] Cache(availableModels): Singleflight refresh failed: failed to get load code assist response: error getting token source: You are not logged into Antigravity.
+E0721 20:46:45.745590 1209706 log.go:398] failed to get load code assist response: error getting token source: You are not logged into Antigravity.
+E0721 20:46:45.747066 1209706 log.go:398] Failed to poll FetchAvailableModels: failed to get load code assist response: error getting token source: You are not logged into Antigravity.
+I0721 20:46:45.748446 1209706 server.go:2579] State refresh took 6ms
+I0721 20:46:45.748546 1209706 server.go:2589] [RemoteControl] Subscription callback triggered.
+I0721 20:46:45.748568 1209706 server.go:2591] [RemoteControl] RemoteControlEnabled value: false
+I0721 20:46:45.748589 1209706 server.go:2722] [RemoteControl] Resolved proxyServerURL: ""
+I0721 20:46:45.748658 1209706 profiler.go:154] Continuous pprof profiling is disabled.
+I0721 20:46:45.749606 1209706 server.go:2160] initialized server successfully in 976.231233ms
+I0721 20:46:45.750309 1209706 auto_updater.go:207] Last check was less than 15 minutes ago, skipping update
+I0721 20:46:45.750446 1209706 common.go:131] Launching CLI mode
+E0721 20:46:45.750518 1209706 common.go:146] Failed to resolve GeminiDir ".gemini": .gemini must be an absolute path: path is not absolute, falling back to default
+W0721 20:46:45.752330 1209706 log_context.go:117] Cache(loadCodeAssistResponse): Singleflight refresh failed: error getting token source: You are not logged into Antigravity.
+E0721 20:46:45.752531 1209706 log.go:398] error getting token source: You are not logged into Antigravity.
+W0721 20:46:45.754313 1209706 log_context.go:117] Cache(userInfo): Singleflight refresh failed: failed to get load code assist response: error getting token source: You are not logged into Antigravity.
+E0721 20:46:45.754591 1209706 log.go:398] failed to get load code assist response: error getting token source: You are not logged into Antigravity.
+I0721 20:46:45.765779 1209706 common.go:177] CLI app data directory: /home/jiang/.gemini/antigravity-cli
+I0721 20:46:45.765968 1209706 server.go:237] Creating CLI server backend: product=antigravity workspaceDirs=[/home/jiang/github/stars /home/jiang/github/stars] appDataDir=/home/jiang/.gemini/antigravity-cli cascadeManager=true codeAssist=true
+I0721 20:46:45.766123 1209706 token_storage.go:110] Using file-based token storage because SSH session detected
+I0721 20:46:45.865613 1209706 server.go:2404] GetConversationDetail: found conversation f81ffb5c-0700-467d-8e90-5d6ca2f6d649 (active=false)
+I0721 20:46:45.867620 1209706 common.go:293] project: resuming conversation belonging to project ID: default-cli-project
+I0721 20:46:45.868355 1209706 common.go:306] project: synced active project to "CLI Project" (id=default-cli-project) from resumed conversation
+I0721 20:46:45.868397 1209706 server.go:1540] Backend project ID updated dynamically to: default-cli-project
+I0721 20:46:45.868464 1209706 printmode.go:108] Print mode: starting (promptLength=777, model="Gemini 3.5 Flash (Medium)", conversationID="f81ffb5c-0700-467d-8e90-5d6ca2f6d649")
+I0721 20:46:45.868541 1209706 manager.go:332] Initializing CLI store manager for workspace /home/jiang/github/stars
+I0721 20:46:45.869432 1209706 cli_setting_manager.go:138] applyUserSettings: no shared config permissions from /home/jiang/.gemini/config/config.json
+I0721 20:46:45.869505 1209706 cli_setting_manager.go:820] Skipping telemetry propagation because user is not logged in
+I0721 20:46:45.869534 1209706 cli_setting_manager.go:81] CLI settings initialized: permissions=<nil>, toolPermission=request-review
+I0721 20:46:45.871813 1209706 hooks_manager.go:53] loaded 0 named hooks from 0 hooks.json file(s)
+I0721 20:46:45.871919 1209706 manager.go:502] CLI store manager initialized successfully
+I0721 20:46:45.871947 1209706 printmode.go:145] Print mode: --dangerously-skip-permissions set, auto-approving all tool permissions
+I0721 20:46:45.871993 1209706 printmode.go:314] Print mode: not authenticated, trying silent auth
+I0721 20:46:45.872449 1209706 keyring.go:81] keyringAuth: loaded token, expiry=2026-07-21 21:23:26.683981139 +0800 CST expired=false
+W0721 20:46:45.872873 1209706 log_context.go:117] Cache(loadCodeAssistResponse): Singleflight refresh failed: error getting token source: You are not logged into Antigravity.
+E0721 20:46:45.873105 1209706 log.go:398] error getting token source: You are not logged into Antigravity.
+W0721 20:46:45.875579 1209706 log_context.go:117] Cache(userInfo): Singleflight refresh failed: failed to get load code assist response: error getting token source: You are not logged into Antigravity.
+E0721 20:46:45.875767 1209706 log.go:398] failed to get load code assist response: error getting token source: You are not logged into Antigravity.
+I0721 20:46:46.749001 1209706 auth.go:135] ChainedAuth: authenticated via keyring (effective: keyring)
+I0721 20:46:46.749106 1209706 server_oauth.go:216] applyAuthResult: email=play.yourcraft.vip@gmail.com, authMethod=consumer, quotaProject=
+I0721 20:46:46.749131 1209706 server_oauth.go:221] OAuth: authenticated successfully as play.yourcraft.vip@gmail.com
+I0721 20:46:46.749153 1209706 server_oauth.go:227] b.codeAssistClient.AuthProvider (0x7f30bf53b0) is same as b.cliAuth (0x7f30bf53b0)
+W0721 20:46:46.749386 1209706 log_context.go:117] Cache(fetchBAICAdminControls): Singleflight refresh failed: admin controls not applicable
+E0721 20:46:46.749465 1209706 log.go:398] admin controls not applicable
+W0721 20:46:46.750025 1209706 log_context.go:117] Failed to refresh cache in background: admin controls not applicable
+W0721 20:46:46.750118 1209706 log_context.go:117] Failed to refresh cache in background: admin controls not applicable
+I0721 20:46:48.134489 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0x2d600ca581d04dc
+I0721 20:46:48.640049 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels Trace: 0xf32aeac04d65bf89
+I0721 20:46:48.705128 1209706 model_resolver.go:73] Resolving model Gemini 3.5 Flash (Medium)
+I0721 20:46:48.705706 1209706 model_config_manager.go:272] Propagating selected model override to backend: label="Gemini 3.5 Flash (Medium)"
+I0721 20:46:48.705893 1209706 quota_manager.go:44] doRefreshQuota: starting reload (force=true)
+I0721 20:46:49.175652 1209706 printmode.go:316] Print mode: silent auth succeeded
+I0721 20:46:49.175796 1209706 model_resolver.go:73] Resolving model Gemini 3.5 Flash (Medium)
+I0721 20:46:49.175971 1209706 experiment_manager.go:38] Starting experiment refresh after login
+I0721 20:46:49.239438 1209706 server.go:2404] GetConversationDetail: found conversation f81ffb5c-0700-467d-8e90-5d6ca2f6d649 (active=false)
+I0721 20:46:49.241724 1209706 printmode.go:206] Print mode: resuming conversation f81ffb5c-0700-467d-8e90-5d6ca2f6d649
+I0721 20:46:49.241789 1209706 conversation_manager.go:582] Streaming conversation f81ffb5c-0700-467d-8e90-5d6ca2f6d649
+I0721 20:46:49.243343 1209706 server.go:926] Starting conversation update stream for f81ffb5c-0700-467d-8e90-5d6ca2f6d649
+I0721 20:46:49.243608 1209706 printmode.go:216] Print mode: conversation=f81ffb5c-0700-467d-8e90-5d6ca2f6d649, sending message
+I0721 20:46:49.442747 1209706 experiment_manager.go:42] Experiments refreshed after login
+I0721 20:46:49.443136 1209706 manager.go:1133] Reloading system slash commands
+I0721 20:46:49.443214 1209706 conversation_manager.go:499] Forwarding user message to conversation f81ffb5c-0700-467d-8e90-5d6ca2f6d649 (items=1, media=0)
+I0721 20:46:49.443253 1209706 server.go:1271] Sending user message to conversation f81ffb5c-0700-467d-8e90-5d6ca2f6d649 (items=1, media=0)
+I0721 20:46:50.127933 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0x736fa8e446405bed
+I0721 20:46:50.560848 1209706 manager.go:423] Ignoring IDLE update because we are waiting for RUNNING
+I0721 20:46:50.875063 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0x827cfc204d9c154e
+I0721 20:46:51.208874 1209706 model_resolver.go:73] Resolving model Gemini 3.5 Flash (Medium)
+I0721 20:46:51.209090 1209706 model_config_manager.go:272] Propagating selected model override to backend: label="Gemini 3.5 Flash (Medium)"
+I0721 20:46:51.209311 1209706 model_resolver.go:73] Resolving model Gemini 3.5 Flash (Medium)
+I0721 20:46:51.209434 1209706 model_config_manager.go:272] Propagating selected model override to backend: label="Gemini 3.5 Flash (Medium)"
+I0721 20:46:51.209815 1209706 quota_manager.go:44] doRefreshQuota: starting reload (force=true)
+I0721 20:46:51.640420 1209706 experiment_manager.go:38] Starting experiment refresh after login
+I0721 20:46:52.201321 1209706 model_resolver.go:73] Resolving model Gemini 3.5 Flash (Medium)
+I0721 20:46:52.201529 1209706 model_config_manager.go:272] Propagating selected model override to backend: label="Gemini 3.5 Flash (Medium)"
+I0721 20:46:52.201886 1209706 quota_manager.go:44] doRefreshQuota: starting reload (force=true)
+I0721 20:46:52.299395 1209706 experiment_manager.go:42] Experiments refreshed after login
+I0721 20:46:52.300091 1209706 experiment_manager.go:38] Starting experiment refresh after login
+I0721 20:46:52.300708 1209706 manager.go:1133] Reloading system slash commands
+I0721 20:46:52.322049 1209706 manager.go:1137] Slash commands unchanged, skipping update
+I0721 20:46:52.589376 1209706 experiment_manager.go:42] Experiments refreshed after login
+I0721 20:46:52.591466 1209706 manager.go:1133] Reloading system slash commands
+I0721 20:46:52.598361 1209706 manager.go:1137] Slash commands unchanged, skipping update
+I0721 20:46:52.637716 1209706 experiment_manager.go:38] Starting experiment refresh after login
+I0721 20:46:52.746282 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0xfb0befc90f3e2b17
+I0721 20:46:52.901925 1209706 experiment_manager.go:42] Experiments refreshed after login
+I0721 20:46:52.902675 1209706 manager.go:1133] Reloading system slash commands
+I0721 20:46:52.912377 1209706 manager.go:1137] Slash commands unchanged, skipping update
+I0721 20:46:57.175021 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x9cf41b49fb71a31c ResponseID: PGpfaqL4Nrbpz7IPj9WLuQ8
+I0721 20:47:06.817624 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x9fb559f76ef3c200 ResponseID: RGpfas_wDa7Wz7IPipzw0QY
+I0721 20:47:10.877872 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x2211c0b137dd13cd ResponseID: TGpfao6qLb6sz7IPy_mmsQQ
+I0721 20:47:14.302364 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x24c910b235cc636c ResponseID: UGpfaq67JPeHz7IPnezg-Ac
+I0721 20:47:19.386005 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xfd40e9ce59917f30 ResponseID: U2pfavePOJ7bz7IPvr6A-Ag
+I0721 20:47:24.122611 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xacdd6331c8bd45ea ResponseID: WWpfaqHCE67Wz7IPipzw0QY
+I0721 20:47:28.335583 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xff554e18f9d224df ResponseID: XWpfaqX6O9-tz7IP1LChoAw
+I0721 20:47:31.998238 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xd8355902d28bb1b5 ResponseID: YmpfarbnC4iJz7IP0cfuiQQ
+I0721 20:47:38.379567 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xde371c32d2af053c ResponseID: ZWpfatv1Mp7bz7IPvr6A-Ag
+I0721 20:47:42.567329 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x303e7da50680afca ResponseID: bGpfatKFIOzjz7IP7oTW8Qs
+I0721 20:47:56.035231 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x965f91559df51a21 ResponseID: cGpfaqu3HPeHz7IPnezg-Ac
+I0721 20:47:59.627441 1209706 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xd6ac88eb3525f973 ResponseID: fWpfaqaqNbbpz7IPj9WLuQ8

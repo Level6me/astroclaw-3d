@@ -102,11 +102,6 @@
 
     <!-- Left Control & Navigation Sidebar (Responsive Drawer) -->
     <aside id="sidebar-left" class="sidebar-left sidebar-drawer-left w-80 shrink-0 p-4 border-r border-glass flex flex-col justify-between z-40 bg-glass-panel relative">
-      
-      <!-- Desktop PC Edge Collapse Button -->
-      <button id="btn-collapse-left" class="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 z-50 btn-hud w-7 h-7 rounded-full items-center justify-center text-xs shadow-lg text-cyan bg-dark-glass border border-cyan/40 hover:scale-110 transition-transform" title="收起左侧面板">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
 
       <!-- Mobile Close Button -->
       <div class="lg:hidden flex justify-between items-center pb-2 mb-2 border-b border-glass">
@@ -230,23 +225,21 @@
         <i class="fa-solid fa-computer-mouse mr-1"></i> 单指拖拽旋转 | 双指捏合缩放 | 点击卫星查看详情
       </div>
 
-      <!-- PC Desktop Collapsed Floating Edge Expand Buttons (Same circular HUD style as collapse buttons) -->
-      <button id="btn-expand-left" style="display: none;" class="z-50 fixed left-3 top-1/2 -translate-y-1/2 btn-hud w-7 h-7 rounded-full items-center justify-center text-xs shadow-lg text-cyan bg-dark-glass border border-cyan/40 hover:scale-110 cursor-pointer transition-transform" title="展开左侧面板">
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
+    <!-- PC Desktop Unified Edge Sliding Handles (100% Horizontal Line Alignment top: calc(50% + 28px)) -->
+    <button id="btn-handle-left-pc" class="hidden lg:flex pc-toggle-handle-left btn-hud w-7 h-7 rounded-full items-center justify-center text-xs shadow-lg text-cyan bg-dark-glass border border-cyan/40 hover:scale-110 cursor-pointer" title="收起/展开左侧面板">
+      <i id="icon-handle-left" class="fa-solid fa-chevron-left"></i>
+    </button>
 
-      <button id="btn-expand-right" style="display: none;" class="z-50 fixed right-3 top-1/2 -translate-y-1/2 btn-hud w-7 h-7 rounded-full items-center justify-center text-xs shadow-lg text-gold bg-dark-glass border border-gold/40 hover:scale-110 cursor-pointer transition-transform" title="展开发射指挥面板">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
+    <button id="btn-handle-right-pc" class="hidden lg:flex pc-toggle-handle-right btn-hud w-7 h-7 rounded-full items-center justify-center text-xs shadow-lg text-gold bg-dark-glass border border-gold/40 hover:scale-110 cursor-pointer" title="收起/展开发射指挥面板">
+      <i id="icon-handle-right" class="fa-solid fa-chevron-right"></i>
+    </button>
+
     </main>
 
     <!-- Right Information Sidebar Panels (Responsive Drawer) -->
     <aside id="sidebar-right" class="sidebar-right sidebar-drawer-right w-96 shrink-0 p-4 border-l border-glass flex flex-col space-y-4 z-40 bg-glass-panel overflow-y-auto relative">
       
-      <!-- Desktop PC Edge Collapse Button -->
-      <button id="btn-collapse-right" class="hidden lg:flex absolute -left-3.5 top-1/2 -translate-y-1/2 z-50 btn-hud w-7 h-7 rounded-full items-center justify-center text-xs shadow-lg text-gold bg-dark-glass border border-gold/40 hover:scale-110 transition-transform" title="收起右侧面板">
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
+      <!-- Mobile Close Button -->
       
       <!-- Mobile Close Button -->
       <div class="lg:hidden flex justify-between items-center pb-2 mb-1 border-b border-glass">
@@ -504,9 +497,9 @@
   </div>
 
   <!-- Scripts -->
-  <script src="audio.js?v=1.2.2"></script>
-  <script src="api.js?v=1.2.2"></script>
-  <script src="globe.js?v=1.2.2"></script>
-  <script src="app.js?v=1.2.2"></script>
+  <script src="audio.js?v=1.2.3"></script>
+  <script src="api.js?v=1.2.3"></script>
+  <script src="globe.js?v=1.2.3"></script>
+  <script src="app.js?v=1.2.3"></script>
 </body>
 </html>
