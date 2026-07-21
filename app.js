@@ -309,14 +309,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('modal-launch-time').textContent = `${formattedDate} UTC`;
     
+    // Resolve hardware specs for specific rocket if missing
+    let specs = { height: item.rocketHeight, thrust: item.rocketThrust, payloadLeo: item.payloadLeo };
+    if (!specs.height || !specs.thrust || window.spaceApi?.resolveRocketSpecs) {
+      specs = window.spaceApi.resolveRocketSpecs(item.rocket || item.name, {});
+    }
+
     if (document.getElementById('modal-launch-orbit')) {
       document.getElementById('modal-launch-orbit').textContent = item.orbit || '近地轨道 (LEO)';
     }
     if (document.getElementById('modal-launch-specs')) {
-      document.getElementById('modal-launch-specs').textContent = `${item.rocketHeight || '70.0米'} • ${item.rocketThrust || '7,607 kN'}`;
+      document.getElementById('modal-launch-specs').textContent = `${specs.height || '70.0米'} • ${specs.thrust || '7,607 kN'}`;
     }
-    if (document.getElementById('modal-launch-webcast')) {
-      document.getElementById('modal-launch-webcast').textContent = item.webcast || '📡 信号准备就绪';
+    if (document.getElementById('modal-launch-payload')) {
+      document.getElementById('modal-launch-payload').textContent = specs.payloadLeo || '22,800 kg';
     }
     if (document.getElementById('modal-launch-pad-loc')) {
       document.getElementById('modal-launch-pad-loc').textContent = item.padLocation || 'Florida, USA';
