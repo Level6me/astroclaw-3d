@@ -21,32 +21,40 @@ class SpaceApiService {
     const name = item.name || '';
 
     let country = '🇺🇸 美国';
+    let flag = '🇺🇸';
     let company = lsp;
 
     if (countryCode === 'CHN' || lsp.includes('CASC') || name.includes('长征') || padName.includes('文昌') || padName.includes('酒泉') || padName.includes('太原') || padName.includes('西昌')) {
       country = '🇨🇳 中国';
-      company = lsp.includes('CASC') ? 'CASC (中国航天科技集团)' : lsp;
+      flag = '🇨🇳';
+      company = lsp.includes('CASC') ? 'CASC (中国航天)' : lsp;
     } else if (countryCode === 'FRA' || countryCode === 'GUF' || lsp.includes('Arianespace')) {
       country = '🇪🇺 欧洲 / 法国';
-      company = 'Arianespace (阿利亚娜航天)';
+      flag = '🇪🇺';
+      company = 'Arianespace';
     } else if (countryCode === 'NZL' || lsp.includes('Rocket Lab')) {
       country = '🇳🇿 新西兰';
-      company = 'Rocket Lab (火箭实验室)';
+      flag = '🇳🇿';
+      company = 'Rocket Lab';
     } else if (countryCode === 'JPN' || lsp.includes('JAXA')) {
       country = '🇯🇵 日本';
-      company = 'JAXA (日本宇宙航空研究开发机构)';
+      flag = '🇯🇵';
+      company = 'JAXA';
     } else if (countryCode === 'RUS' || lsp.includes('Roscosmos')) {
       country = '🇷🇺 俄罗斯';
-      company = 'Roscosmos (俄罗斯航天局)';
+      flag = '🇷🇺';
+      company = 'Roscosmos';
     } else if (lsp.includes('SpaceX')) {
       country = '🇺🇸 美国';
-      company = 'SpaceX (太空探索技术公司)';
+      flag = '🇺🇸';
+      company = 'SpaceX';
     } else if (lsp.includes('ULA') || lsp.includes('United Launch')) {
       country = '🇺🇸 美国';
-      company = 'ULA (联合发射联盟)';
+      flag = '🇺🇸';
+      company = 'ULA';
     }
 
-    return { country, company };
+    return { country, flag, company };
   }
 
   // 1. Celestrak Real Satellite TLE Data Fetcher
@@ -137,7 +145,7 @@ class SpaceApiService {
       if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
       const data = await res.json();
       return data.results.map((item) => {
-        const { country, company } = this.resolveCountryAndCompany(item);
+        const { country, flag, company } = this.resolveCountryAndCompany(item);
         return {
           name: item.name || 'Falcon 9 - Starlink Launch',
           windowStart: item.window_start || new Date(Date.now() + 36000000).toISOString(),
@@ -146,6 +154,7 @@ class SpaceApiService {
           pad: item.pad?.name || 'Kennedy Space Center LC-39A',
           lsp: item.launch_service_provider?.name || 'SpaceX',
           country: country,
+          flag: flag,
           company: company
         };
       });
@@ -162,7 +171,8 @@ class SpaceApiService {
           pad: 'Cape Canaveral SLC-40',
           lsp: 'SpaceX',
           country: '🇺🇸 美国',
-          company: 'SpaceX (太空探索技术公司)'
+          flag: '🇺🇸',
+          company: 'SpaceX'
         }));
       } catch (err2) {
         return this.generateFallbackLaunches();
@@ -176,32 +186,35 @@ class SpaceApiService {
       {
         name: 'SpaceX Falcon 9 • Starlink Group 12-4',
         windowStart: new Date(now + 14 * 3600000 + 42 * 60000).toISOString(),
-        status: 'Go for Launch (准许发射)',
+        status: 'Go for Launch (准许)',
         rocket: 'Falcon 9 Block 5',
-        pad: 'KSC LC-39A, 佛罗里达州',
+        pad: 'KSC LC-39A',
         lsp: 'SpaceX',
         country: '🇺🇸 美国',
-        company: 'SpaceX (太空探索技术公司)'
+        flag: '🇺🇸',
+        company: 'SpaceX'
       },
       {
         name: '长征五号乙 • 天宫空间站巡天望远镜 (CSST)',
         windowStart: new Date(now + 48 * 3600000).toISOString(),
-        status: 'Scheduled (排期中)',
-        rocket: 'Long March 5B (长征五号乙)',
-        pad: '文昌航天发射场 101工位',
-        lsp: 'CASC (中国航天科技集团)',
+        status: 'Scheduled (排期)',
+        rocket: 'Long March 5B',
+        pad: '文昌发射场 101工位',
+        lsp: 'CASC',
         country: '🇨🇳 中国',
-        company: 'CASC (中国航天科技集团)'
+        flag: '🇨🇳',
+        company: 'CASC (中国航天)'
       },
       {
         name: 'Ariane 6 • Galileo L13 Missions',
         windowStart: new Date(now + 96 * 3600000).toISOString(),
         status: 'Go for Launch',
         rocket: 'Ariane 62',
-        pad: 'Kourou ELA-4, 法属圭亚那',
+        pad: 'Kourou ELA-4',
         lsp: 'Arianespace',
         country: '🇪🇺 欧洲 / 法国',
-        company: 'Arianespace (阿利亚娜航天)'
+        flag: '🇪🇺',
+        company: 'Arianespace'
       },
       {
         name: 'Rocket Lab Electron • Owl Night Long',
@@ -211,7 +224,8 @@ class SpaceApiService {
         pad: 'LC-1A, 新西兰',
         lsp: 'Rocket Lab',
         country: '🇳🇿 新西兰',
-        company: 'Rocket Lab (火箭实验室)'
+        flag: '🇳🇿',
+        company: 'Rocket Lab'
       }
     ];
   }
