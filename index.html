@@ -230,15 +230,13 @@
         <i class="fa-solid fa-computer-mouse mr-1"></i> 单指拖拽旋转 | 双指捏合缩放 | 点击卫星查看详情
       </div>
 
-      <!-- PC Desktop Collapsed Floating Edge Expand Buttons -->
-      <button id="btn-expand-left" style="display: none;" class="z-50 fixed left-0 top-1/2 -translate-y-1/2 btn-hud px-3 py-3.5 rounded-r-xl text-xs text-cyan bg-black-75 backdrop-blur-md border-r border-y border-cyan shadow-2xl items-center space-x-1.5 hover:scale-110 cursor-pointer transition-all" title="展开左侧控制面板">
-        <i class="fa-solid fa-angles-right text-cyan animate-pulse"></i>
-        <span class="font-bold text-2xs">卫星控制</span>
+      <!-- PC Desktop Collapsed Floating Edge Expand Buttons (Same circular HUD style as collapse buttons) -->
+      <button id="btn-expand-left" style="display: none;" class="z-50 fixed left-3 top-1/2 -translate-y-1/2 btn-hud w-7 h-7 rounded-full items-center justify-center text-xs shadow-lg text-cyan bg-dark-glass border border-cyan/40 hover:scale-110 cursor-pointer transition-transform" title="展开左侧面板">
+        <i class="fa-solid fa-chevron-right"></i>
       </button>
 
-      <button id="btn-expand-right" style="display: none;" class="z-50 fixed right-0 top-1/2 -translate-y-1/2 btn-hud px-3 py-3.5 rounded-l-xl text-xs text-gold bg-black-75 backdrop-blur-md border-l border-y border-gold shadow-2xl items-center space-x-1.5 hover:scale-110 cursor-pointer transition-all" title="展开发射与天气面板">
-        <span class="font-bold text-2xs">发射指挥</span>
-        <i class="fa-solid fa-angles-left text-gold animate-pulse"></i>
+      <button id="btn-expand-right" style="display: none;" class="z-50 fixed right-3 top-1/2 -translate-y-1/2 btn-hud w-7 h-7 rounded-full items-center justify-center text-xs shadow-lg text-gold bg-dark-glass border border-gold/40 hover:scale-110 cursor-pointer transition-transform" title="展开发射指挥面板">
+        <i class="fa-solid fa-chevron-left"></i>
       </button>
     </main>
 
@@ -363,7 +361,7 @@
   </nav>
 
   <!-- Modal: Detailed Satellite Information Card -->
-  <div id="modal-sat-detail" class="modal-overlay hidden fixed inset-0 z-50 flex items-center justify-center bg-black-75 backdrop-blur-sm p-4">
+  <div id="modal-sat-detail" class="modal-overlay hidden fixed inset-0 z-60 flex items-center justify-center bg-black-75 backdrop-blur-sm p-4">
     <div class="modal-content w-full max-w-lg bg-glass-panel border border-cyan rounded-lg p-4 sm:p-6 shadow-2xl space-y-3 sm:space-y-4 relative animate-fade-in max-h-90vh overflow-y-auto">
       
       <!-- Close Button -->
@@ -434,7 +432,7 @@
   </div>
 
   <!-- Modal: Detailed Rocket Launch Information Card -->
-  <div id="modal-launch-detail" class="modal-overlay hidden fixed inset-0 z-50 flex items-center justify-center bg-black-75 backdrop-blur-sm p-4">
+  <div id="modal-launch-detail" class="modal-overlay hidden fixed inset-0 z-60 flex items-center justify-center bg-black-75 backdrop-blur-sm p-4">
     <div class="modal-content w-full max-w-lg bg-glass-panel border border-gold rounded-lg p-5 sm:p-6 shadow-2xl space-y-4 relative animate-fade-in max-h-90vh overflow-y-auto">
       
       <!-- Close Button -->
@@ -506,9 +504,9 @@
   </div>
 
   <!-- Scripts -->
-  <script src="audio.js?v=1.2.1"></script>
-  <script src="api.js?v=1.2.1"></script>
-  <script src="globe.js?v=1.2.1"></script>
-  <script src="app.js?v=1.2.1"></script>
+  <script src="audio.js?v=1.2.2"></script>
+  <script src="api.js?v=1.2.2"></script>
+  <script src="globe.js?v=1.2.2"></script>
+  <script src="app.js?v=1.2.2"></script>
 </body>
 </html>

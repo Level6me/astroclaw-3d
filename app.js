@@ -380,6 +380,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     modal.classList.remove('hidden');
+
+    // Close drawers if open to ensure modal backdrop takes full precedence
+    closeLeftDrawer();
+    closeRightDrawer();
   }
 
   const btnCloseLaunchModal = document.getElementById('btn-close-launch-modal');
