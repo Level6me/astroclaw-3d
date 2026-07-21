@@ -546,31 +546,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const iconHandleLeft = document.getElementById('icon-handle-left');
   const iconHandleRight = document.getElementById('icon-handle-right');
 
-  function toggleLeftPc(forceState) {
+  let isLeftCollapsed = false;
+  let isRightCollapsed = false;
+
+  function setLeftCollapsed(collapsed) {
     if (window.spaceAudio) window.spaceAudio.playClick();
-    const isCollapsed = forceState !== undefined ? forceState : !sidebarLeft.classList.contains('pc-collapsed');
-    sidebarLeft.classList.toggle('pc-collapsed', isCollapsed);
-    if (btnHandleLeftPc) btnHandleLeftPc.classList.toggle('collapsed', isCollapsed);
+    isLeftCollapsed = collapsed;
+    sidebarLeft.classList.toggle('pc-collapsed', isLeftCollapsed);
+    if (btnHandleLeftPc) btnHandleLeftPc.classList.toggle('collapsed', isLeftCollapsed);
     if (iconHandleLeft) {
-      iconHandleLeft.className = isCollapsed ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-left';
+      iconHandleLeft.className = isLeftCollapsed ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-left';
+    }
+    if (btnToggleLeftPc) {
+      btnToggleLeftPc.classList.toggle('opacity-50', isLeftCollapsed);
     }
     if (globe && globe.onWindowResize) setTimeout(() => globe.onWindowResize(), 360);
   }
 
-  function toggleRightPc(forceState) {
+  function setRightCollapsed(collapsed) {
     if (window.spaceAudio) window.spaceAudio.playClick();
-    const isCollapsed = forceState !== undefined ? forceState : !sidebarRight.classList.contains('pc-collapsed');
-    sidebarRight.classList.toggle('pc-collapsed', isCollapsed);
-    if (btnHandleRightPc) btnHandleRightPc.classList.toggle('collapsed', isCollapsed);
+    isRightCollapsed = collapsed;
+    sidebarRight.classList.toggle('pc-collapsed', isRightCollapsed);
+    if (btnHandleRightPc) btnHandleRightPc.classList.toggle('collapsed', isRightCollapsed);
     if (iconHandleRight) {
-      iconHandleRight.className = isCollapsed ? 'fa-solid fa-chevron-left' : 'fa-solid fa-chevron-right';
+      iconHandleRight.className = isRightCollapsed ? 'fa-solid fa-chevron-left' : 'fa-solid fa-chevron-right';
+    }
+    if (btnToggleRightPc) {
+      btnToggleRightPc.classList.toggle('opacity-50', isRightCollapsed);
     }
     if (globe && globe.onWindowResize) setTimeout(() => globe.onWindowResize(), 360);
   }
 
-  if (btnToggleLeftPc) btnToggleLeftPc.addEventListener('click', () => toggleLeftPc());
-  if (btnToggleRightPc) btnToggleRightPc.addEventListener('click', () => toggleRightPc());
-  if (btnHandleLeftPc) btnHandleLeftPc.addEventListener('click', () => toggleLeftPc());
-  if (btnHandleRightPc) btnHandleRightPc.addEventListener('click', () => toggleRightPc());
+  if (btnToggleLeftPc) btnToggleLeftPc.addEventListener('click', () => setLeftCollapsed(!isLeftCollapsed));
+  if (btnToggleRightPc) btnToggleRightPc.addEventListener('click', () => setRightCollapsed(!isRightCollapsed));
+  if (btnHandleLeftPc) btnHandleLeftPc.addEventListener('click', () => setLeftCollapsed(!isLeftCollapsed));
+  if (btnHandleRightPc) btnHandleRightPc.addEventListener('click', () => setRightCollapsed(!isRightCollapsed));
 
 });

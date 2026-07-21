@@ -356,5 +356,6 @@ body {
 
   .pc-toggle-handle-right.collapsed {
     right: 1.25rem;
+    transform: translate(50%, -50%);
   }
 }
