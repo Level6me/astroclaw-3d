@@ -112,3 +112,10 @@ I0721 11:30:11.100739 995483 manager.go:1133] Reloading system slash commands
 I0721 11:30:11.106366 995483 manager.go:1137] Slash commands unchanged, skipping update
 I0721 11:30:15.405872 995483 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xe8228736c450eb35 ResponseID: xOdeapyLIOmgz7IP9P3lyAk
 I0721 11:30:18.711391 995483 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x8a8b862af2596ed0 ResponseID: yedeapzPDduGz7IP4faegQE
+I0721 11:30:24.593946 995483 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xd70b17d3e18f3f3f ResponseID: z-deaua9CPaHz7IP1fS_wQ4
+I0721 11:30:29.297537 995483 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x7527a8e217fef844 ResponseID: 0-deaq2vN9TRz7IPrtjo0QY
+I0721 11:30:41.787303 995483 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x8235ed17122e6f24 ResponseID: 4OdeatW4MY7tz7IPzoGLyQk
+I0721 11:30:44.148579 995483 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x8e9f37875ddf909f ResponseID: 4-deapugA8Hfz7IPmLzfuQw
+I0721 11:30:46.394020 995483 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xa7d7b0a50526d2e1 ResponseID: 5edeauXXHODjz7IP25TH6Q4
+I0721 11:30:47.388248 995483 manager.go:682] CLI store manager shutting down
+I0721 11:30:47.403270 995483 conversation_manager.go:540] Stopping conversation stream

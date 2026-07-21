@@ -267,13 +267,14 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="text-3xs text-gold font-mono font-bold shrink-0">${dateStr}</span>
         </div>
 
-        <div class="flex items-center flex-wrap gap-1.5 font-mono text-3xs">
-          <span class="px-1.5 py-0.5 rounded bg-cyan-900/60 text-cyan border border-cyan/40 font-bold">${item.country || '🇺🇸 美国'}</span>
-          <span class="px-1.5 py-0.5 rounded bg-purple-900/60 text-purple-200 border border-purple/40 font-bold truncate max-w-xs">${item.company || 'SpaceX'}</span>
-          <span class="ml-auto text-3xs text-green font-mono">${item.status}</span>
+        <div class="flex items-center gap-1.5 font-mono text-3xs">
+          <span class="text-cyan font-bold">${item.country || '🇺🇸 美国'}</span>
+          <span class="text-dim">•</span>
+          <span class="text-purple-300 font-medium truncate">${item.company || 'SpaceX'}</span>
+          <span class="ml-auto text-3xs text-green font-mono shrink-0">${item.status}</span>
         </div>
 
-        <div class="text-3xs text-dim truncate font-mono pt-0.5 flex justify-between items-center border-t border-glass/40">
+        <div class="text-3xs text-dim truncate font-mono pt-0.5 flex justify-between items-center border-t border-glass/30">
           <span class="truncate"><i class="fa-solid fa-shuttle-space mr-1 text-gold"></i>${item.rocket}</span>
           <span class="truncate ml-2"><i class="fa-solid fa-location-dot mr-1 text-cyan"></i>${item.pad}</span>
         </div>
