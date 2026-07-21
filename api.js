@@ -1,7 +1,7 @@
 /**
  * Real-time Space Data API Integration Engine
  * Connects Celestrak, Launch Library 2, SpaceX, NASA APOD, and NOAA Space Weather APIs.
- * Automatically handles CORS proxies and graceful offline fallbacks.
+ * Includes Country & Launch Service Provider (Company) resolution.
  */
 class SpaceApiService {
   constructor() {
@@ -11,33 +11,61 @@ class SpaceApiService {
     this.spacexBase = 'https://api.spacexdata.com/v4/launches/upcoming';
     this.nasaApodUrl = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY';
     this.noaaKpUrl = 'https://services.swpc.noaa.gov/json/planetary_k_index_1m.json';
-    this.noaaXrayUrl = 'https://services.swpc.noaa.gov/json/goes/primary/xrays-1-day.json';
+  }
+
+  // Helper: Resolve Country Name & Flag from Country Code or LSP
+  resolveCountryAndCompany(item) {
+    const lsp = item.launch_service_provider?.name || item.lsp || 'SpaceX';
+    const countryCode = item.pad?.location?.country_code || '';
+    const padName = item.pad?.name || item.pad || '';
+    const name = item.name || '';
+
+    let country = '🇺🇸 美国';
+    let company = lsp;
+
+    if (countryCode === 'CHN' || lsp.includes('CASC') || name.includes('长征') || padName.includes('文昌') || padName.includes('酒泉') || padName.includes('太原') || padName.includes('西昌')) {
+      country = '🇨🇳 中国';
+      company = lsp.includes('CASC') ? 'CASC (中国航天科技集团)' : lsp;
+    } else if (countryCode === 'FRA' || countryCode === 'GUF' || lsp.includes('Arianespace')) {
+      country = '🇪🇺 欧洲 / 法国';
+      company = 'Arianespace (阿利亚娜航天)';
+    } else if (countryCode === 'NZL' || lsp.includes('Rocket Lab')) {
+      country = '🇳🇿 新西兰';
+      company = 'Rocket Lab (火箭实验室)';
+    } else if (countryCode === 'JPN' || lsp.includes('JAXA')) {
+      country = '🇯🇵 日本';
+      company = 'JAXA (日本宇宙航空研究开发机构)';
+    } else if (countryCode === 'RUS' || lsp.includes('Roscosmos')) {
+      country = '🇷🇺 俄罗斯';
+      company = 'Roscosmos (俄罗斯航天局)';
+    } else if (lsp.includes('SpaceX')) {
+      country = '🇺🇸 美国';
+      company = 'SpaceX (太空探索技术公司)';
+    } else if (lsp.includes('ULA') || lsp.includes('United Launch')) {
+      country = '🇺🇸 美国';
+      company = 'ULA (联合发射联盟)';
+    }
+
+    return { country, company };
   }
 
   // 1. Celestrak Real Satellite TLE Data Fetcher
   async fetchSatellites(group = 'starlink') {
     const rawUrl = `${this.celestrakBase}?GROUP=${group}&FORMAT=json`;
     
-    // Try Direct Fetch
     try {
       const res = await fetch(rawUrl, { signal: AbortSignal.timeout(4000) });
       if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
       const data = await res.json();
-      console.log(`[Celestrak Direct] Successfully loaded ${data.length} real satellites for ${group}`);
       return this.parseCelestrakJson(data, group);
     } catch (err1) {
-      console.warn(`[Celestrak Direct] Failed (${err1.message}), trying CORS proxy...`);
-      
-      // Try CORS Proxy
       try {
         const proxyUrl = `${this.corsProxy}${encodeURIComponent(rawUrl)}`;
         const res2 = await fetch(proxyUrl, { signal: AbortSignal.timeout(5000) });
         if (!res2.ok) throw new Error(`Proxy Error ${res2.status}`);
         const data2 = await res2.json();
-        console.log(`[Celestrak Proxy] Successfully loaded ${data2.length} real satellites for ${group}`);
         return this.parseCelestrakJson(data2, group);
       } catch (err2) {
-        console.warn(`[Celestrak Proxy] Failed (${err2.message}), falling back to telemetry generator.`);
         return this.generateFallbackSatellites(group);
       }
     }
@@ -108,32 +136,35 @@ class SpaceApiService {
       const res = await fetch(`${this.launchLibBase}?limit=6`, { signal: AbortSignal.timeout(4000) });
       if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
       const data = await res.json();
-      console.log(`[LaunchLib Direct] Loaded ${data.results.length} real launches.`);
-      return data.results.map((item) => ({
-        name: item.name || 'Falcon 9 - Starlink Launch',
-        windowStart: item.window_start || new Date(Date.now() + 36000000).toISOString(),
-        status: item.status?.name || 'Go for Launch',
-        rocket: item.rocket?.configuration?.name || 'Falcon 9 Block 5',
-        pad: item.pad?.name || 'Kennedy Space Center LC-39A',
-        lsp: item.launch_service_provider?.name || 'SpaceX'
-      }));
+      return data.results.map((item) => {
+        const { country, company } = this.resolveCountryAndCompany(item);
+        return {
+          name: item.name || 'Falcon 9 - Starlink Launch',
+          windowStart: item.window_start || new Date(Date.now() + 36000000).toISOString(),
+          status: item.status?.name || 'Go for Launch',
+          rocket: item.rocket?.configuration?.name || 'Falcon 9 Block 5',
+          pad: item.pad?.name || 'Kennedy Space Center LC-39A',
+          lsp: item.launch_service_provider?.name || 'SpaceX',
+          country: country,
+          company: company
+        };
+      });
     } catch (err) {
-      console.warn('[LaunchLib Direct] Failed, trying SpaceX API fallback:', err.message);
       try {
         const resSpacex = await fetch(this.spacexBase, { signal: AbortSignal.timeout(4000) });
         if (!resSpacex.ok) throw new Error(`SpaceX API Error ${resSpacex.status}`);
         const dataSpacex = await resSpacex.json();
-        console.log(`[SpaceX API Direct] Loaded ${dataSpacex.length} SpaceX upcoming launches.`);
         return dataSpacex.slice(0, 5).map((item) => ({
           name: item.name || 'SpaceX Starlink Launch',
           windowStart: item.date_utc || new Date(Date.now() + 14 * 3600000).toISOString(),
           status: 'Scheduled',
           rocket: 'Falcon 9 Block 5',
           pad: 'Cape Canaveral SLC-40',
-          lsp: 'SpaceX'
+          lsp: 'SpaceX',
+          country: '🇺🇸 美国',
+          company: 'SpaceX (太空探索技术公司)'
         }));
       } catch (err2) {
-        console.warn('[SpaceX API] Failed, using telemetry generator:', err2.message);
         return this.generateFallbackLaunches();
       }
     }
@@ -148,7 +179,9 @@ class SpaceApiService {
         status: 'Go for Launch (准许发射)',
         rocket: 'Falcon 9 Block 5',
         pad: 'KSC LC-39A, 佛罗里达州',
-        lsp: 'SpaceX'
+        lsp: 'SpaceX',
+        country: '🇺🇸 美国',
+        company: 'SpaceX (太空探索技术公司)'
       },
       {
         name: '长征五号乙 • 天宫空间站巡天望远镜 (CSST)',
@@ -156,7 +189,9 @@ class SpaceApiService {
         status: 'Scheduled (排期中)',
         rocket: 'Long March 5B (长征五号乙)',
         pad: '文昌航天发射场 101工位',
-        lsp: 'CASC (中国航天科技集团)'
+        lsp: 'CASC (中国航天科技集团)',
+        country: '🇨🇳 中国',
+        company: 'CASC (中国航天科技集团)'
       },
       {
         name: 'Ariane 6 • Galileo L13 Missions',
@@ -164,7 +199,9 @@ class SpaceApiService {
         status: 'Go for Launch',
         rocket: 'Ariane 62',
         pad: 'Kourou ELA-4, 法属圭亚那',
-        lsp: 'Arianespace'
+        lsp: 'Arianespace',
+        country: '🇪🇺 欧洲 / 法国',
+        company: 'Arianespace (阿利亚娜航天)'
       },
       {
         name: 'Rocket Lab Electron • Owl Night Long',
@@ -172,7 +209,9 @@ class SpaceApiService {
         status: 'Scheduled',
         rocket: 'Electron',
         pad: 'LC-1A, 新西兰',
-        lsp: 'Rocket Lab'
+        lsp: 'Rocket Lab',
+        country: '🇳🇿 新西兰',
+        company: 'Rocket Lab (火箭实验室)'
       }
     ];
   }
@@ -183,7 +222,6 @@ class SpaceApiService {
       const res = await fetch(this.nasaApodUrl, { signal: AbortSignal.timeout(4000) });
       if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
       const data = await res.json();
-      console.log(`[NASA APOD Live] Loaded picture of the day: ${data.title}`);
       return {
         title: data.title || 'The Cosmic Web & Deep Field',
         date: data.date || '2026-07-21',
@@ -191,7 +229,6 @@ class SpaceApiService {
         explanation: data.explanation || ''
       };
     } catch (err) {
-      console.warn('[NASA APOD] Failed, using JWST fallback picture:', err.message);
       return {
         title: 'JWST 银河系深空高分辨率星云星团视角',
         date: '2026-07-21',
@@ -216,7 +253,6 @@ class SpaceApiService {
         if (latestKp >= 5) kpStatus = 'Kp ' + latestKp.toFixed(1) + ' (地磁暴预警)';
         else if (latestKp >= 4) kpStatus = 'Kp ' + latestKp.toFixed(1) + ' (活跃)';
 
-        console.log(`[NOAA Space Weather Live] Loaded real Kp index: ${latestKp}`);
         return {
           solarFlare: 'C1.4 (正常无异常)',
           kpIndex: kpStatus,
@@ -224,7 +260,7 @@ class SpaceApiService {
         };
       }
     } catch (err) {
-      console.warn('[NOAA Space Weather] Failed, using telemetry generator:', err.message);
+      // Fallback
     }
 
     return {

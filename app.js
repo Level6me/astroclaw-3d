@@ -242,6 +242,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('launch-title').textContent = next.name;
     document.getElementById('launch-pad').textContent = next.pad;
     document.getElementById('launch-rocket').textContent = next.rocket;
+    
+    if (document.getElementById('launch-country')) {
+      document.getElementById('launch-country').textContent = next.country || '🇺🇸 美国';
+    }
+    if (document.getElementById('launch-company')) {
+      document.getElementById('launch-company').textContent = next.company || 'SpaceX';
+    }
 
     // Start Countdown
     startLaunchCountdown(next.windowStart);
@@ -253,15 +260,19 @@ document.addEventListener('DOMContentLoaded', () => {
     launches.slice(1).forEach(item => {
       const dateStr = new Date(item.windowStart).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
       const row = document.createElement('div');
-      row.className = 'launch-row p-1.5 rounded bg-dark-glass border border-glass flex justify-between items-center text-xs';
+      row.className = 'launch-row p-2 rounded bg-dark-glass border border-glass flex justify-between items-center text-xs space-x-2';
       row.innerHTML = `
-        <div class="truncate mr-2">
+        <div class="truncate flex-1">
           <div class="font-bold text-light truncate text-2xs sm:text-xs">${item.name}</div>
-          <div class="text-3xs sm:text-2xs text-dim truncate">${item.rocket} • ${item.pad}</div>
+          <div class="flex items-center gap-1.5 mt-0.5 font-mono text-3xs">
+            <span class="text-cyan font-bold">${item.country || '🇺🇸 美国'}</span>
+            <span class="text-dim">•</span>
+            <span class="text-purple-300 font-semibold truncate">${item.company || 'SpaceX'}</span>
+          </div>
         </div>
         <div class="text-right shrink-0">
-          <div class="text-3xs sm:text-2xs text-cyan font-mono">${dateStr}</div>
-          <div class="text-3xs sm:text-2xs text-green font-mono">${item.status}</div>
+          <div class="text-3xs sm:text-2xs text-gold font-mono font-bold">${dateStr}</div>
+          <div class="text-3xs text-green font-mono">${item.status}</div>
         </div>
       `;
       listContainer.appendChild(row);

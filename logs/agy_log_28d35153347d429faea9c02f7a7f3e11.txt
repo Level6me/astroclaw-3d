@@ -113,3 +113,10 @@ I0721 10:51:03.888869 981630 http_helpers.go:228] URL: https://daily-cloudcode-p
 I0721 10:51:07.053894 981630 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x391c88eb284927e ResponseID: md5eaqvjG7iHz7IP6ZifsQU
 I0721 10:51:10.065586 981630 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x7a9351c54ec392a6 ResponseID: nN5earK9HpHQz7IPhNTu-QU
 I0721 10:51:13.414152 981630 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xe37f39a130a7b97 ResponseID: n95eas-hGe2hz7IPro_uWA
+I0721 10:51:19.271664 981630 http_helpers.go:228] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x592d64483f6c8948 ResponseID: pd5eap6EKu-dz7IPj4q26Q8
+I0721 10:51:20.944766 981630 manager.go:682] CLI store manager shutting down
+I0721 10:51:20.946274 981630 conversation_manager.go:540] Stopping conversation stream
+I0721 10:51:20.946639 981630 server.go:966] Stream goroutine exited for f81ffb5c-0700-467d-8e90-5d6ca2f6d649, sending completion signal
+I0721 10:51:20.946820 981630 conversation_manager.go:661] Stream completed for f81ffb5c-0700-467d-8e90-5d6ca2f6d649, clearing ResponsePending
+I0721 10:51:20.947764 981630 server.go:2454] Language server shutting down
+I0721 10:51:20.947850 981630 server.go:2459] Waiting for migrations to complete to prevent partial migration state...
