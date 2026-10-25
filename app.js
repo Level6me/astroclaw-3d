@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const query = e.target.value.trim().toLowerCase();
     if (!query) {
       globe.updateSatellites(satellitesList);
+      document.getElementById('satellite-count').textContent = satellitesList.length;
       return;
     }
     const filtered = satellitesList.filter(s => 
@@ -314,16 +315,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const flagIcon = item.flag || '🇺🇸';
       const row = document.createElement('div');
       row.className = 'launch-row p-2 rounded bg-dark-glass border border-glass flex justify-between items-center text-xs space-x-2 cursor-pointer hover:border-gold transition-colors';
+      const esc = (s) => String(s || '').replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
       row.innerHTML = `
         <div class="truncate flex-1">
-          <div class="font-bold text-light truncate text-2xs sm:text-xs">${item.name}</div>
+          <div class="font-bold text-light truncate text-2xs sm:text-xs">${esc(item.name)}</div>
           <div class="text-3xs sm:text-2xs text-dim truncate font-mono mt-0.5">
-            <span>${flagIcon} ${item.company || 'SpaceX'}</span> • <span>${item.rocket}</span> • <span>${item.pad}</span>
+            <span>${flagIcon} ${esc(item.company) || 'SpaceX'}</span> • <span>${esc(item.rocket)}</span> • <span>${esc(item.pad)}</span>
           </div>
         </div>
         <div class="text-right shrink-0">
           <div class="text-3xs sm:text-2xs text-gold font-mono font-bold">${dateStr}</div>
-          <div class="text-3xs text-green font-mono">${item.status}</div>
+          <div class="text-3xs text-green font-mono">${esc(item.status)}</div>
         </div>
       `;
 
