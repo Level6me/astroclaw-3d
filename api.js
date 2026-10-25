@@ -520,7 +520,7 @@ class SpaceApiService {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
         const recent = data.slice(-8);
-        const latestKp = recent[recent.length - 1].kp_index || 2.3;
+        const latestKp = parseFloat(recent[recent.length - 1].kp_index) || 2.3;
         const kpValues = recent.map(d => parseFloat(d.kp_index || 2.0));
         
         let kpStatus = 'Kp ' + latestKp.toFixed(1) + ' (平静)';

@@ -359,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Resolve hardware specs for specific rocket if missing
     let specs = { height: item.rocketHeight, thrust: item.rocketThrust, payloadLeo: item.payloadLeo };
-    if (!specs.height || !specs.thrust || window.spaceApi?.resolveRocketSpecs) {
+    if (!specs.height || !specs.thrust) {
       specs = window.spaceApi.resolveRocketSpecs(item.rocket || item.name, {});
     }
 
